@@ -506,7 +506,7 @@ int analysis()
 	//TTree *t1 = (TTree*)f1->Get("demo/AnalysisTree");
 
 	//for file2
-	TFile *f2 = new TFile("data_histo_allmass.root");
+	TFile *f2 = new TFile("data_histo_totaldimuons.root");
 	TTree *t2 = (TTree*)f2->Get("demo/AnalysisTree");
 
 //---------------------------------------------------------------------------------
