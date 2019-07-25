@@ -500,23 +500,32 @@ void JpsiAnalyzerOpen2011::analyze(const edm::Event& iEvent, const edm::EventSet
 	//Specific vector for muons (it has more information than normal C++ vector)
 	std::vector<reco::Muon> myLeptons;
 	std::vector<reco::Muon> myLeptons2;
-
-	//---------------------------------------------------------------------------
-	//Loop Reco Muons - Tight Muon Criteria
-	//---------------------------------------------------------------------------
+	
 	for (reco::MuonCollection::const_iterator muon = recoMuons->begin(); muon != recoMuons->end(); muon++) 
 	{
 		CounterMuons++;
+
+		//---------------------------------------------------------------------------
+		//Loose Muon Criteria
+		//---------------------------------------------------------------------------
+		if ( !muon->isTrackerMuon() ) continue;
+		myLeptons2.push_back(*muon); //fill
+		countProbes++;
+
+		//---------------------------------------------------------------------------
+		//Tight Muon Criteria
+		//---------------------------------------------------------------------------
 		if (!muon->isPFMuon()) continue;
 		if (!muon->isGlobalMuon()) continue;
 		if(muon->globalTrack()->normalizedChi2() > 10) continue;
-		if(muon->globalTrack()->hitPattern().numberOfValidMuonHits() < 0) continue; 
+		if(muon->globalTrack()->hitPattern().numberOfValidMuonHits() < 0) continue;
 		if(muon->numberOfMatchedStations() < 2) continue; 
 		//if(muon->innerTrack()->hitPattern().numberOfValidTrackerHits() < 10) continue;
 		//if(muon->innerTrack()->normalizedChi2() > 1.8) continue;
 		if( fabs(muon->outerTrack()->dxy()) > 0.2) continue;
 		//if( (fabs(muon->innerTrack()->dxy(vertex->position())) > 0.2/*cm*/) && (fabs(leadingMuon.innerTrack()->dz(vertex->position())) > 0.2/*cm*/) ) continue;
 
+		std::cout << "Fill Vector of the muons" << std::endl;
 		VectorMuon_Pt.push_back(muon->pt());
 		VectorMuon_Eta.push_back(muon->eta());
 		VectorMuon_Phi.push_back(muon->phi());
@@ -525,22 +534,10 @@ void JpsiAnalyzerOpen2011::analyze(const edm::Event& iEvent, const edm::EventSet
 
 		//if (verbose_) std::cout<< " dxy: "<< fabs(muon->innerTrack()->dxy(vertex->position()))  << std::endl; 
 		if (verbose_) std::cout<< " dz: "<< fabs(muon->innerTrack()->dz(vertex->position()))  << std::endl;
-		// if (verbose_) std::cout << muon->charge() << std::endl;
-		
+
 		myLeptons.push_back(*muon); //fill
 
-	}//End Muon Loop
-
-	//---------------------------------------------------------------------------
-	//Loop Reco Muons - Loose Muon Criteria
-	//---------------------------------------------------------------------------
-	for (reco::MuonCollection::const_iterator muon = recoMuons->begin(); muon != recoMuons->end(); muon++) 
-	{
-		if ( !muon->isTrackerMuon() ) continue;
-		myLeptons2.push_back(*muon); //fill
-		countProbes++;
-
-	}//End Muon Loop
+	}//End Tight Muon Loop
 
 	//---------------------------------------------------------------------------
 	// dimuon selection
@@ -581,6 +578,7 @@ void JpsiAnalyzerOpen2011::analyze(const edm::Event& iEvent, const edm::EventSet
 			//They must have opposite charges (In the case of a resonance with charge 0, of ouse)
 			if( leadingMuon.charge() != trailingMuon.charge() ) continue;
 
+			std::cout << "Resonance Window" << std::endl;
 			//Resonance window
 			if( (M < 2.8) && (M > 3.2)  ) continue;
 
@@ -590,6 +588,7 @@ void JpsiAnalyzerOpen2011::analyze(const edm::Event& iEvent, const edm::EventSet
 			if( !trailingMuon.isPFMuon() && !trailingMuon.isGlobalMuon() && trailingMuon.globalTrack()->normalizedChi2() > 10 && trailingMuon.globalTrack()->hitPattern().numberOfValidMuonHits() < 0 && trailingMuon.numberOfMatchedStations() < 2 && fabs(trailingMuon.outerTrack()->dxy()) > 0.2 ) continue;
 			countTotalLeadingMu++;
 
+			std::cout << "Efficience of the probe" << std::endl;
 			//Efficience of the tracks (loose muons) passing throught the muon criteria (tight muons)
 			Eff_prob =+ countProbes / countTotalLeadingMu ;
 
