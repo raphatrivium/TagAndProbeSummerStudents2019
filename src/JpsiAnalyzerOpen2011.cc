@@ -419,6 +419,12 @@ void JpsiAnalyzerOpen2011::analyze(const edm::Event& iEvent, const edm::EventSet
 	//Accessing Muon Collection
 	edm::Handle< reco::MuonCollection > recoMuons;
 	iEvent.getByLabel(recoMuons_, recoMuons);
+	//is valid method
+	if ( !recoMuons.isValid() ) 
+	{
+		std::cout << "Error in getting Muon product from Event!" << std::endl;
+		return;
+	}
 
 	//Accessing Track Collection
 	//edm::Handle<reco::TrackCollection> tracks;
@@ -436,7 +442,7 @@ void JpsiAnalyzerOpen2011::analyze(const edm::Event& iEvent, const edm::EventSet
 	iEvent.getByLabel(hlTriggerEvent_,triggerEventHandle_);
 	if (!triggerEventHandle_.isValid()) 
 	{
-		std::cout << "Error in getting TriggerEvent product from Event!" << std::endl;
+		std::cout << "Error in getting muons from Event!" << std::endl;
 		return;
 	}
 
@@ -509,35 +515,46 @@ void JpsiAnalyzerOpen2011::analyze(const edm::Event& iEvent, const edm::EventSet
 		//Loose Muon Criteria
 		//---------------------------------------------------------------------------
 		if ( !muon->isTrackerMuon() ) continue;
-		myLeptons2.push_back(*muon); //fill
+		//myLeptons2.push_back(*muon); //fill
 		countProbes++;
 
-		//---------------------------------------------------------------------------
-		//Tight Muon Criteria
-		//---------------------------------------------------------------------------
-		if (!muon->isPFMuon()) continue;
-		if (!muon->isGlobalMuon()) continue;
-		if(muon->globalTrack()->normalizedChi2() > 10) continue;
-		if(muon->globalTrack()->hitPattern().numberOfValidMuonHits() < 0) continue;
-		if(muon->numberOfMatchedStations() < 2) continue; 
-		//if(muon->innerTrack()->hitPattern().numberOfValidTrackerHits() < 10) continue;
-		//if(muon->innerTrack()->normalizedChi2() > 1.8) continue;
-		if( fabs(muon->outerTrack()->dxy()) > 0.2) continue;
-		//if( (fabs(muon->innerTrack()->dxy(vertex->position())) > 0.2/*cm*/) && (fabs(leadingMuon.innerTrack()->dz(vertex->position())) > 0.2/*cm*/) ) continue;
+		//TLorentz vector of the loose muon
+		mu_1.SetPtEtaPhiM(muon->pt(), muon->eta(), muon->phi(), muon->mass());
+		
+			for (reco::MuonCollection::const_iterator muon2 = recoMuons->begin(); muon2 != recoMuons->end(); muon++) 
+			{
+				//check tight muon information and good muon information
+				//---------------------------------------------------------------------------
+				//Tight Muon Criteria
+				//---------------------------------------------------------------------------
+				if (!muon2->isGlobalMuon()) continue;
+				if(muon2->globalTrack()->normalizedChi2() > 10) continue;
+				if(muon2->globalTrack()->hitPattern().numberOfValidMuonHits() < 0) continue;
+				if(muon2->numberOfMatchedStations() < 2) continue; 
+				//if(muon->innerTrack()->hitPattern().numberOfValidTrackerHits() < 10) continue;
+				//if(muon->innerTrack()->normalizedChi2() > 1.8) continue;
+				//if( fabs(muon->outerTrack()->dxy()) > 0.2) continue;
+				//if( (fabs(muon->innerTrack()->dxy(vertex->position())) > 0.2/*cm*/) && (fabs(leadingMuon.innerTrack()->dz(vertex->position())) > 0.2/*cm*/) ) continue;
+	
+				//TLorentz vector of the tight muon
+				mu_1.SetPtEtaPhiM(muon2->pt(), muon2->eta(), muon2->phi(), muon2->mass());
 
-		std::cout << "Fill Vector of the muons" << std::endl;
-		VectorMuon_Pt.push_back(muon->pt());
-		VectorMuon_Eta.push_back(muon->eta());
-		VectorMuon_Phi.push_back(muon->phi());
-		VectorMuon_Charge.push_back(muon->charge());
-		VectorMuon_Mass.push_back(muon->mass());
+				if( muon->charge() != muon2->charge() ) continue;
 
-		//if (verbose_) std::cout<< " dxy: "<< fabs(muon->innerTrack()->dxy(vertex->position()))  << std::endl; 
-		if (verbose_) std::cout<< " dz: "<< fabs(muon->innerTrack()->dz(vertex->position()))  << std::endl;
+				std::cout << "Fill Vector of the muons" << std::endl;
+				VectorMuon_Pt.push_back(muon->pt());
+				VectorMuon_Eta.push_back(muon->eta());
+				VectorMuon_Phi.push_back(muon->phi());
+				VectorMuon_Charge.push_back(muon->charge());
+				VectorMuon_Mass.push_back(muon->mass());
 
-		myLeptons.push_back(*muon); //fill
+				//if (verbose_) std::cout<< " dxy: "<< fabs(muon->innerTrack()->dxy(vertex->position()))  << std::endl; 
+				if (verbose_) std::cout<< " dz: "<< fabs(muon->innerTrack()->dz(vertex->position()))  << std::endl;
 
-	}//End Tight Muon Loop
+				myLeptons.push_back(*muon); //fill
+			}//End second Muon Loop
+
+	}//End first Muon Loop
 
 	//---------------------------------------------------------------------------
 	// dimuon selection
