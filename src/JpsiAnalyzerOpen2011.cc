@@ -186,7 +186,6 @@ JpsiAnalyzerOpen2011::JpsiAnalyzerOpen2011(const edm::ParameterSet& iConfig):
 	triggerflag_ (iConfig.getParameter< bool > ("triggerflag")),
 	primaryVertexProducer_ (iConfig.getParameter<edm::InputTag>("primaryVertexProducer")),
 	recoMuons_(iConfig.getParameter<edm::InputTag>("recoMuonsLabel")),
-	theVertexLabel_(iConfig.getParameter<edm::InputTag>("VertexLabel")),
 	// Reco config with the trigger
 	minMuPt_ (iConfig.getParameter<double>("minMuPt")),
 	maxMuEta_ (iConfig.getParameter<double>("maxMuEta")),
@@ -309,9 +308,11 @@ void JpsiAnalyzerOpen2011::analyze(const edm::Event& iEvent, const edm::EventSet
   unsigned int theIndexOfThePrimaryVertex = 999.;
 
 //GET BY LABEL
+	
 
   edm::Handle<reco::VertexCollection> vertex;
-  iEvent.getByToken(theVertexLabel_, vertex);
+  //iEvent.getByToken(theVertexLabel_, vertex);
+	iEvent.getByLabel("offlinePrimaryVertices", vertex);
   if (vertex.isValid()) {
     for (unsigned int ind = 0; ind < vertex->size(); ++ind) {
       if ((*vertex)[ind].isValid() && !((*vertex)[ind].isFake())) {
@@ -328,7 +329,8 @@ void JpsiAnalyzerOpen2011::analyze(const edm::Event& iEvent, const edm::EventSet
     LogInfo("RecoMuonValidator") << "reco::PrimaryVertex not found, use BeamSpot position instead\n";
 
     edm::Handle<reco::BeamSpot> recoBeamSpotHandle;
-    iEvent.getByToken(theBeamSpotLabel_, recoBeamSpotHandle);
+   // iEvent.getByToken(theBeamSpotLabel_, recoBeamSpotHandle);
+	iEvent.getByLabel("offlineBeamSpot", recoBeamSpotHandle);
     reco::BeamSpot bs = *recoBeamSpotHandle;
 
     posVtx = bs.position();
@@ -336,6 +338,8 @@ void JpsiAnalyzerOpen2011::analyze(const edm::Event& iEvent, const edm::EventSet
     errVtx(1, 1) = bs.BeamWidthY();
     errVtx(2, 2) = bs.sigmaZ();
   }
+
+	 const reco::Vertex vtx(posVtx, errVtx);
 
 	//int nVertices = recoVertices->size();
 	//if (verbose_) std::cout << "nVertices "<< nVertices << std::endl;
@@ -431,6 +435,8 @@ void JpsiAnalyzerOpen2011::analyze(const edm::Event& iEvent, const edm::EventSet
 		//if (verbose_) std::cout<< " dxy: "<< fabs(muon->innerTrack()->dxy(vertex->position()))  << std::endl; 
 		//if (verbose_) std::cout<< " dz: "<< fabs(muon->innerTrack()->dz(vertex->position()))  << std::endl;
 
+		//if (muon::isTightMuon(*muon, vtx) ) continue;
+
 		myLeptons.push_back(*muon); //fill
 
 	}//End Tight Muon Loop
@@ -455,7 +461,7 @@ void JpsiAnalyzerOpen2011::analyze(const edm::Event& iEvent, const edm::EventSet
 		reco::Muon leadingMuon = myLeptons[0];//first
 		reco::Muon trailingMuon = myLeptons[1];//second
 
-		if( leadingMuon.isGlobalMuon() /*&& tightmuon */)
+		if( muon::isTightMuon(leadingMuon, vtx) )
 		{
 			//Fill Vectors
 			VectorTagMuon_Pt.push_back(leadingMuon.pt());
@@ -471,7 +477,7 @@ void JpsiAnalyzerOpen2011::analyze(const edm::Event& iEvent, const edm::EventSet
 			VectorProbeMuon_Mass.push_back(trailingMuon.mass());
 
 		}
-		else  //else if
+		else if (muon::isTightMuon(trailingMuon, vtx) ) 
 		{
 			//Fill Vectors
 			VectorTagMuon_Pt.push_back(trailingMuon.pt());

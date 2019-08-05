@@ -11,7 +11,7 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 process.source = cms.Source("PoolSource",
     # replace 'myfile.root' with the source file you want to use
     fileNames = cms.untracked.vstring(
-    'root://eospublic.cern.ch//eos/opendata/cms/Run2011A/DoubleMu/AOD/12Oct2013-v1/10001/027912FE-9337-E311-B928-003048FFD796.root'    )
+    'root://eospublic.cern.ch//eos/opendata/cms/Run2011A/DoubleMu/AOD/12Oct2013-v1/20000/0867387C-033F-E311-AFE0-0026189438A2.root'    )
 )
 
 goodJSON = 'Cert_160404-180252_7TeV_ReRecoNov08_Collisions11_JSON.txt'
@@ -21,7 +21,7 @@ process.source.lumisToProcess.extend(myLumis)
 
 process.TFileService = cms.Service ('TFileService',
     fileName = cms.string (
-    'data_histo63.root'    )
+    'data_histo3.root'    )
 )
   
 process.demo = cms.EDAnalyzer('JpsiAnalyzerOpen2011',
