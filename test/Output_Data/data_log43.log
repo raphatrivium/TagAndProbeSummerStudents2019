@@ -401,7 +401,7 @@ Using Trigger selection
  
 *********************************************************************** 
 Total_Events: 400
-Eff_prob: 1
+Eff_prob: 3
 Paths: HLT_Dimuon10_Jpsi_Barrel_v
 Paths: HLT_Dimuon7_PsiPrime_v
 N of Evts using Trigger Fired :8
@@ -413,5 +413,5 @@ normalizedChi2: 0
 db < 3cm and dz < 15cm: 0
 PFMuon: 0
 TrackerGlobalMuon: 0
-nDimuon: 0
+nDimuon: 8
 *********************************************************************** 

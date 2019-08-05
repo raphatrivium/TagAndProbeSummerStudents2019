@@ -90,11 +90,8 @@ class JpsiAnalyzerOpen2011 : public edm::EDAnalyzer {
 		// ----------member data ---------------------------
 
 		TTree* AnalysisTree;
-		//TBranch* branch;
 
-		//Histogrms
-		//TH1F* leadingMuon_Pt ;
-
+		
 
 		bool verbose_;
 		bool triggerflag_;
@@ -143,7 +140,6 @@ class JpsiAnalyzerOpen2011 : public edm::EDAnalyzer {
 		double Eta = 0.;
 		double Rapidity = 0.;
 		
-
 		//Trigger
 		int countInAccepted = 0;
 		int countInTriggered = 0 ;
@@ -152,81 +148,25 @@ class JpsiAnalyzerOpen2011 : public edm::EDAnalyzer {
 		std::vector<int> VectorEvent;
 		std::vector<int> VectorRun;
 		std::vector<int> VectorlumiBlock;
+	
+		std::vector<double> VectorTagMuon_Pt;
+		std::vector<double> VectorTagMuon_Eta;
+		std::vector<double> VectorTagMuon_Phi;
+		std::vector<int> VectorTagMuon_Charge;
+		std::vector<double> VectorTagMuon_Mass;
 
-		std::vector<double> VectorMuon_Pt;
-		std::vector<double>	VectorMuon_Eta;
-		std::vector<double>	VectorMuon_Phi;
-		std::vector<int>	VectorMuon_Charge;
-		std::vector<double>	VectorMuon_Mass;
-
-		std::vector<double> TrackerMuonPt;
-		std::vector<double> TrackerMuonEta;
-		std::vector<double> TrackerMuonPhi;
-		std::vector<int> TrackerMuonCharge;
-
-		std::vector<double> GlobalMuonPt;
-		std::vector<double> GlobalMuonEta;
-		std::vector<double> GlobalMuonPhi;
-		std::vector<int> GlobalMuonCharge;
-
-		std::vector<double> VectorMuonTight_Pt;
-		std::vector<double> VectorMuonTight_Eta;
-		std::vector<double> VectorMuonTight_Phi;
-		std::vector<int> VectorMuonTight_Charge;
-		std::vector<double> VectorMuonTight_Mass;
-
-		std::vector<double> VectorMuonTightValidHits_Pt;
-		std::vector<double> VectorMuonTightValidHits_Eta;
-		std::vector<double> VectorMuonTightValidHits_Phi;
-		std::vector<int> VectorMuonTightValidHits_Charge;
-		std::vector<double> VectorMuonTightValidHits_Mass;
-
-		std::vector<double> VectorMuonTightValidHitsPixelLayer_Pt;
-		std::vector<double> VectorMuonTightValidHitsPixelLayer_Eta;
-		std::vector<double> VectorMuonTightValidHitsPixelLayer_Phi;
-		std::vector<int> VectorMuonTightValidHitsPixelLayer_Charge;
-		std::vector<double> VectorMuonTightValidHitsPixelLayer_Mass;
-
-		std::vector<double> VectorMuonTightValidHitsPixelLayerChi2_Pt;
-		std::vector<double> VectorMuonTightValidHitsPixelLayerChi2_Eta;
-		std::vector<double> VectorMuonTightValidHitsPixelLayerChi2_Phi;
-		std::vector<int> VectorMuonTightValidHitsPixelLayerChi2_Charge;
-		std::vector<double> VectorMuonTightValidHitsPixelLayerChi2_Mass;
-
-		std::vector<double> VectorMuonTightValidHitsPixelLayerChi2DbDz_Pt;
-		std::vector<double> VectorMuonTightValidHitsPixelLayerChi2DbDz_Eta;
-		std::vector<double> VectorMuonTightValidHitsPixelLayerChi2DbDz_Phi;
-		std::vector<int> VectorMuonTightValidHitsPixelLayerChi2DbDz_Charge;
-		std::vector<double> VectorMuonTightValidHitsPixelLayerChi2DbDz_Mass;
-
-		std::vector<double> VectorMuonTightValidHitsPixelLayerChi2DbDzPf_Pt;
-		std::vector<double> VectorMuonTightValidHitsPixelLayerChi2DbDzPf_Eta;
-		std::vector<double> VectorMuonTightValidHitsPixelLayerChi2DbDzPf_Phi;
-		std::vector<int> VectorMuonTightValidHitsPixelLayerChi2DbDzPf_Charge;
-		std::vector<double> VectorMuonTightValidHitsPixelLayerChi2DbDzPf_Mass;
-
-		std::vector<double> VectorMuonTightValidHitsPixelLayerChi2DbDzPfTG_Pt;
-		std::vector<double> VectorMuonTightValidHitsPixelLayerChi2DbDzPfTG_Eta;
-		std::vector<double> VectorMuonTightValidHitsPixelLayerChi2DbDzPfTG_Phi;
-		std::vector<int> VectorMuonTightValidHitsPixelLayerChi2DbDzPfTG_Charge;
-		std::vector<double> VectorMuonTightValidHitsPixelLayerChi2DbDzPfTG_Mass;
-
-		std::vector<double> VectorleadingMuon_Pt;
-		std::vector<double> VectorleadingMuon_Eta;
-		std::vector<double> VectorleadingMuon_Phi;
-		std::vector<int> VectorleadingMuon_Charge;
-		std::vector<double> VectorleadingMuon_Mass;
-
-		std::vector<double> VectortrailingMuon_Pt;
-		std::vector<double> VectortrailingMuon_Eta;
-		std::vector<double> VectortrailingMuon_Phi;
-		std::vector<int> VectortrailingMuon_Charge;
-		std::vector<double> VectortrailingMuon_Mass;
+		std::vector<double> VectorProbeMuon_Pt;
+		std::vector<double> VectorProbeMuon_Eta;
+		std::vector<double> VectorProbeMuon_Phi;
+		std::vector<int> VectorProbeMuon_Charge;
+		std::vector<double> VectorProbeMuon_Mass;
 
 		std::vector<double> VectorMll;
 		std::vector<double> VectorMllpT;
 		std::vector<double> VectorMlleta;
 		std::vector<double> VectorMllphi;
+
+		std::vector<double> ResonancePeak;
 
 };
 
@@ -246,6 +186,7 @@ JpsiAnalyzerOpen2011::JpsiAnalyzerOpen2011(const edm::ParameterSet& iConfig):
 	triggerflag_ (iConfig.getParameter< bool > ("triggerflag")),
 	primaryVertexProducer_ (iConfig.getParameter<edm::InputTag>("primaryVertexProducer")),
 	recoMuons_(iConfig.getParameter<edm::InputTag>("recoMuonsLabel")),
+	theVertexLabel_(iConfig.getParameter<edm::InputTag>("VertexLabel")),
 	// Reco config with the trigger
 	minMuPt_ (iConfig.getParameter<double>("minMuPt")),
 	maxMuEta_ (iConfig.getParameter<double>("maxMuEta")),
@@ -265,6 +206,7 @@ JpsiAnalyzerOpen2011::JpsiAnalyzerOpen2011(const edm::ParameterSet& iConfig):
 
 	//HistoMuon_Pt = fs->make<TH1F>("HistoMuon_Pt"  , "Muon_Pt"  ,   100,   0., 200.);
 	
+	
 
 	//Define Trees
 	AnalysisTree = fs->make<TTree>("AnalysisTree","Muon Analysis Tree");
@@ -278,80 +220,27 @@ JpsiAnalyzerOpen2011::~JpsiAnalyzerOpen2011()
 	// do anything here that needs to be done at desctruction time
 	// (e.g. close files, deallocate resources etc.)
     std::vector<std::string>().swap(NameTrigger);
-	std::vector<double>().swap(VectorMuon_Pt);
-	std::vector<double>().swap(VectorMuon_Eta);
-	std::vector<double>().swap(VectorMuon_Phi);
-	std::vector<int>().swap(VectorMuon_Charge);
-	std::vector<double>().swap(VectorMuon_Mass);
+	
 
-	std::vector<double>().swap(TrackerMuonPt);
-	std::vector<double>().swap(TrackerMuonEta);
-	std::vector<double>().swap(TrackerMuonPhi);
-	std::vector<int>().swap(TrackerMuonCharge);
+	std::vector<double>().swap(VectorTagMuon_Pt);
+	std::vector<double>().swap(VectorTagMuon_Eta);
+	std::vector<double>().swap(VectorTagMuon_Phi);
+	std::vector<int>().swap(VectorTagMuon_Charge);
+	std::vector<double>().swap(VectorTagMuon_Mass);
 
-	std::vector<double>().swap(GlobalMuonPt);
-	std::vector<double>().swap(GlobalMuonEta);
-	std::vector<double>().swap(GlobalMuonPhi);
-	std::vector<int>().swap(GlobalMuonCharge);
-
-	std::vector<double>().swap(VectorMuonTight_Pt);
-	std::vector<double>().swap(VectorMuonTight_Eta);
-	std::vector<double>().swap(VectorMuonTight_Phi);
-	std::vector<int>().swap(VectorMuonTight_Charge);
-	std::vector<double>().swap(VectorMuonTight_Mass);
-
-	std::vector<double>().swap(VectorMuonTightValidHits_Pt);
-	std::vector<double>().swap(VectorMuonTightValidHits_Eta);
-	std::vector<double>().swap(VectorMuonTightValidHits_Phi);
-	std::vector<int>().swap(VectorMuonTightValidHits_Charge);
-	std::vector<double>().swap(VectorMuonTightValidHits_Mass);
-
-	std::vector<double>().swap(VectorMuonTightValidHitsPixelLayer_Pt);
-	std::vector<double>().swap(VectorMuonTightValidHitsPixelLayer_Eta);
-	std::vector<double>().swap(VectorMuonTightValidHitsPixelLayer_Phi);
-	std::vector<int>().swap(VectorMuonTightValidHitsPixelLayer_Charge);
-	std::vector<double>().swap(VectorMuonTightValidHitsPixelLayer_Mass);
-
-	std::vector<double>().swap(VectorMuonTightValidHitsPixelLayerChi2_Pt);
-	std::vector<double>().swap(VectorMuonTightValidHitsPixelLayerChi2_Eta);
-	std::vector<double>().swap(VectorMuonTightValidHitsPixelLayerChi2_Phi);
-	std::vector<int>().swap(VectorMuonTightValidHitsPixelLayerChi2_Charge);
-	std::vector<double>().swap(VectorMuonTightValidHitsPixelLayerChi2_Mass);	
-
-	std::vector<double>().swap(VectorMuonTightValidHitsPixelLayerChi2DbDz_Pt);
-	std::vector<double>().swap(VectorMuonTightValidHitsPixelLayerChi2DbDz_Eta);
-	std::vector<double>().swap(VectorMuonTightValidHitsPixelLayerChi2DbDz_Phi);
-	std::vector<int>().swap(VectorMuonTightValidHitsPixelLayerChi2DbDz_Charge);
-	std::vector<double>().swap(VectorMuonTightValidHitsPixelLayerChi2DbDz_Mass);	
-
-	std::vector<double>().swap(VectorMuonTightValidHitsPixelLayerChi2DbDzPf_Pt);
-	std::vector<double>().swap(VectorMuonTightValidHitsPixelLayerChi2DbDzPf_Eta);
-	std::vector<double>().swap(VectorMuonTightValidHitsPixelLayerChi2DbDzPf_Phi);
-	std::vector<int>().swap(VectorMuonTightValidHitsPixelLayerChi2DbDzPf_Charge);
-	std::vector<double>().swap(VectorMuonTightValidHitsPixelLayerChi2DbDzPf_Mass);
-
-	std::vector<double>().swap(VectorMuonTightValidHitsPixelLayerChi2DbDzPfTG_Pt);
-	std::vector<double>().swap(VectorMuonTightValidHitsPixelLayerChi2DbDzPfTG_Eta);
-	std::vector<double>().swap(VectorMuonTightValidHitsPixelLayerChi2DbDzPfTG_Phi);
-	std::vector<int>().swap(VectorMuonTightValidHitsPixelLayerChi2DbDzPfTG_Charge);
-	std::vector<double>().swap(VectorMuonTightValidHitsPixelLayerChi2DbDzPfTG_Mass);
-
-	std::vector<double>().swap(VectorleadingMuon_Pt);
-	std::vector<double>().swap(VectorleadingMuon_Eta);
-	std::vector<double>().swap(VectorleadingMuon_Phi);
-	std::vector<int>().swap(VectorleadingMuon_Charge);
-	std::vector<double>().swap(VectorleadingMuon_Mass);
-
-	std::vector<double>().swap(VectortrailingMuon_Pt);
-	std::vector<double>().swap(VectortrailingMuon_Eta);
-	std::vector<double>().swap(VectortrailingMuon_Phi);
-	std::vector<int>().swap(VectortrailingMuon_Charge);
-	std::vector<double>().swap(VectortrailingMuon_Mass);
+	std::vector<double>().swap(VectorProbeMuon_Pt);
+	std::vector<double>().swap(VectorProbeMuon_Eta);
+	std::vector<double>().swap(VectorProbeMuon_Phi);
+	std::vector<int>().swap(VectorProbeMuon_Charge);
+	std::vector<double>().swap(VectorProbeMuon_Mass);
 
 	std::vector<double>().swap(VectorMll);
 	std::vector<double>().swap(VectorMllpT);
 	std::vector<double>().swap(VectorMlleta);
 	std::vector<double>().swap(VectorMllphi);
+
+	std::vector<double>().swap(ResonancePeak);
+	
 
 }
 //------------------------------------------------------------------------------------------------------------
@@ -409,26 +298,60 @@ void JpsiAnalyzerOpen2011::analyze(const edm::Event& iEvent, const edm::EventSet
 	if (verbose_) std::cout<<" Run # "<<irun<<" Evt # "<<ievt<<" lumiBlock # "<<lumiBlock<<std::endl;
           
 	using namespace edm;
-	const reco::Vertex* vertex = 0;
-	edm::Handle< reco::VertexCollection > recoVertices;
-	iEvent.getByLabel(primaryVertexProducer_, recoVertices);
-	int nVertices = recoVertices->size();
-	if (verbose_) std::cout << "nVertices "<< nVertices << std::endl;
-	if(nVertices>0) vertex = & ((*recoVertices)[0]);
+
+	//Accessing Track Collection
+	//edm::Handle<reco::VertexCollection> recoVertices;
+	//iEvent.getByLabel(primaryVertexProducer_, recoVertices);
+	
+	//Look for the Primary Vertex (and use the BeamSpot instead, if you can't find it):
+  reco::Vertex::Point posVtx;
+  reco::Vertex::Error errVtx;
+  unsigned int theIndexOfThePrimaryVertex = 999.;
+
+//GET BY LABEL
+
+  edm::Handle<reco::VertexCollection> vertex;
+  iEvent.getByToken(theVertexLabel_, vertex);
+  if (vertex.isValid()) {
+    for (unsigned int ind = 0; ind < vertex->size(); ++ind) {
+      if ((*vertex)[ind].isValid() && !((*vertex)[ind].isFake())) {
+        theIndexOfThePrimaryVertex = ind;
+        break;
+      }
+    }
+  }
+
+  if (theIndexOfThePrimaryVertex < 100) {
+    posVtx = ((*vertex)[theIndexOfThePrimaryVertex]).position();
+    errVtx = ((*vertex)[theIndexOfThePrimaryVertex]).error();
+  } else {
+    LogInfo("RecoMuonValidator") << "reco::PrimaryVertex not found, use BeamSpot position instead\n";
+
+    edm::Handle<reco::BeamSpot> recoBeamSpotHandle;
+    iEvent.getByToken(theBeamSpotLabel_, recoBeamSpotHandle);
+    reco::BeamSpot bs = *recoBeamSpotHandle;
+
+    posVtx = bs.position();
+    errVtx(0, 0) = bs.BeamWidthX();
+    errVtx(1, 1) = bs.BeamWidthY();
+    errVtx(2, 2) = bs.sigmaZ();
+  }
+
+	//int nVertices = recoVertices->size();
+	//if (verbose_) std::cout << "nVertices "<< nVertices << std::endl;
+	//if(nVertices>0) vertex = & ((*recoVertices)[0]);
+
 
 	//Accessing Muon Collection
 	edm::Handle< reco::MuonCollection > recoMuons;
 	iEvent.getByLabel(recoMuons_, recoMuons);
 	//is valid method
-	if ( !recoMuons.isValid() ) 
-	{
-		std::cout << "Error in getting Muon product from Event!" << std::endl;
-		return;
-	}
 
 	//Accessing Track Collection
 	//edm::Handle<reco::TrackCollection> tracks;
    //iEvent.getByLabel("generalTracks", tracks);
+
+	
         
    Total_Events++;
 
@@ -442,7 +365,7 @@ void JpsiAnalyzerOpen2011::analyze(const edm::Event& iEvent, const edm::EventSet
 	iEvent.getByLabel(hlTriggerEvent_,triggerEventHandle_);
 	if (!triggerEventHandle_.isValid()) 
 	{
-		std::cout << "Error in getting muons from Event!" << std::endl;
+		std::cout << "Error in getting TriggerEvent product from Event!" << std::endl;
 		return;
 	}
 
@@ -460,31 +383,27 @@ void JpsiAnalyzerOpen2011::analyze(const edm::Event& iEvent, const edm::EventSet
     for (unsigned int i=0; i<triggerName_.size(); i++) 
 	{   
        
-	bool triggerFound = triggerfound(iEvent,HLTR,triggerName_[i]);
-	if (triggerFound) countInAccepted++; 
-	if (triggerFound == true && verbose_) std::cout<< "HLT trigger is found: " << triggerFound <<" Trigger Path found : " << triggerName_[i] << std::endl;
-
-	bool triggerFired = triggerfired(iEvent,HLTR,triggerName_[i]);
-	if (triggerFired) countInTriggered++; 
-	if (triggerFired == true && verbose_) std::cout<< "TriggerFired : "<< triggerFired <<" Trigger Path :"<< triggerName_[i] << std::endl;
-
-	const unsigned int numberOfHltPaths = HLTR->size();
-	//const unsigned int numberOfHltFilters = triggerEventHandle_->sizeFilters();
-
-	if (triggerFired == true) NameTrigger.push_back(triggerName_[i]);
-
-	unsigned int pathIndex = triggerIndex(iEvent,HLTR,triggerName_[i]);
-	if (pathIndex>=numberOfHltPaths) {
+		bool triggerFound = triggerfound(iEvent,HLTR,triggerName_[i]);
+		if (triggerFound) countInAccepted++; 
+		if (triggerFound == true && verbose_) std::cout<< "HLT trigger is found: " << triggerFound <<" Trigger Path found : " << triggerName_[i] << std::endl;
+		bool triggerFired = triggerfired(iEvent,HLTR,triggerName_[i]);
+		if (triggerFired) countInTriggered++; 
+		if (triggerFired == true && verbose_) std::cout<< "TriggerFired : "<< triggerFired <<" Trigger Path :"<< triggerName_[i] << std::endl;
+		const unsigned int numberOfHltPaths = HLTR->size();
+		//const unsigned int numberOfHltFilters = triggerEventHandle_->sizeFilters();
+		if (triggerFired == true) NameTrigger.push_back(triggerName_[i]);
+		unsigned int pathIndex = triggerIndex(iEvent,HLTR,triggerName_[i]);
+		if (pathIndex>=numberOfHltPaths) {
 		std::cout << " WARNING: path " << triggerName_[i] << " out of range in TriggerResults" << std::endl;
 		return;
-	}
+		}
 
-	if (HLTR->wasrun(pathIndex)) {
+		if (HLTR->wasrun(pathIndex)) {
 		if (!triggerFound) std::cout << " WARNING: path exists in HLTR but not found in TriggerResults" << std::endl;
-	}
-	else {
+		}
+		else {
 		if (triggerFound) std::cout << " WARNING: path found in TriggerResults but it does not exist in HLTR" << std::endl;
-	}
+		}
 
     
 	
@@ -494,162 +413,93 @@ void JpsiAnalyzerOpen2011::analyze(const edm::Event& iEvent, const edm::EventSet
 	if (triggerFired == true)
 	{ //triggerfired
 
-	// Loop Track Collection
-	//int j = 0;
-   //for (reco::TrackCollection::const_iterator track = tracks->begin();  track != tracks->end();  ++track) 
-	//{ 
-   //   std::cout << "Track " << j << " " << track->charge()*track->pt() << " " << track->phi() << " " << track->eta() << " " << track->dxy() << " " << track->dz() << std::endl;
-   //   j++;
-   //}
-
-
 	//Specific vector for muons (it has more information than normal C++ vector)
 	std::vector<reco::Muon> myLeptons;
-	std::vector<reco::Muon> myLeptons2;
 	
+	//for (reco::MuonCollection::const_iterator recoMu1 = muons->begin(); recoMu1!=muons->end(); ++recoMu1) {
 	for (reco::MuonCollection::const_iterator muon = recoMuons->begin(); muon != recoMuons->end(); muon++) 
 	{
 		CounterMuons++;
+		//std::cout<< " muon->mass(): "<< muon->mass()  << "   muon->pt(): "<< muon->pt()  <<std::endl;
 
 		//---------------------------------------------------------------------------
 		//Loose Muon Criteria
 		//---------------------------------------------------------------------------
 		if ( !muon->isTrackerMuon() ) continue;
-		//myLeptons2.push_back(*muon); //fill
 		countProbes++;
-
-		//TLorentz vector of the loose muon
-		mu_1.SetPtEtaPhiM(muon->pt(), muon->eta(), muon->phi(), muon->mass());
 		
-			for (reco::MuonCollection::const_iterator muon2 = recoMuons->begin(); muon2 != recoMuons->end(); muon++) 
-			{
-				//check tight muon information and good muon information
-				//---------------------------------------------------------------------------
-				//Tight Muon Criteria
-				//---------------------------------------------------------------------------
-				if (!muon2->isGlobalMuon()) continue;
-				if(muon2->globalTrack()->normalizedChi2() > 10) continue;
-				if(muon2->globalTrack()->hitPattern().numberOfValidMuonHits() < 0) continue;
-				if(muon2->numberOfMatchedStations() < 2) continue; 
-				//if(muon->innerTrack()->hitPattern().numberOfValidTrackerHits() < 10) continue;
-				//if(muon->innerTrack()->normalizedChi2() > 1.8) continue;
-				//if( fabs(muon->outerTrack()->dxy()) > 0.2) continue;
-				//if( (fabs(muon->innerTrack()->dxy(vertex->position())) > 0.2/*cm*/) && (fabs(leadingMuon.innerTrack()->dz(vertex->position())) > 0.2/*cm*/) ) continue;
-	
-				//TLorentz vector of the tight muon
-				mu_1.SetPtEtaPhiM(muon2->pt(), muon2->eta(), muon2->phi(), muon2->mass());
+		//if (verbose_) std::cout<< " dxy: "<< fabs(muon->innerTrack()->dxy(vertex->position()))  << std::endl; 
+		//if (verbose_) std::cout<< " dz: "<< fabs(muon->innerTrack()->dz(vertex->position()))  << std::endl;
 
-				if( muon->charge() != muon2->charge() ) continue;
+		myLeptons.push_back(*muon); //fill
 
-				std::cout << "Fill Vector of the muons" << std::endl;
-				VectorMuon_Pt.push_back(muon->pt());
-				VectorMuon_Eta.push_back(muon->eta());
-				VectorMuon_Phi.push_back(muon->phi());
-				VectorMuon_Charge.push_back(muon->charge());
-				VectorMuon_Mass.push_back(muon->mass());
+	}//End Tight Muon Loop
 
-				//if (verbose_) std::cout<< " dxy: "<< fabs(muon->innerTrack()->dxy(vertex->position()))  << std::endl; 
-				if (verbose_) std::cout<< " dz: "<< fabs(muon->innerTrack()->dz(vertex->position()))  << std::endl;
-
-				myLeptons.push_back(*muon); //fill
-			}//End second Muon Loop
-
-	}//End first Muon Loop
-
-	//---------------------------------------------------------------------------
-	// dimuon selection
-	//---------------------------------------------------------------------------
-	//Notice that we use "size_t" because it must be the same type of "myLeptons.size()"
-	for ( size_t count1 = 0 ; count1 < myLeptons.size(); count1++ )
+	//==========================================================================
+	// sort the muons of highest pt to lowest 
+	//==========================================================================
+	std::sort(myLeptons.begin(),myLeptons.end(), [](const reco::Muon &a, const reco::Muon &b)
 	{
-		reco::Muon leadingMuon = myLeptons[count1];
+		return a.pt() > b.pt();
+	});
 
-		for (size_t count2 = 0 ; count2 < myLeptons2.size(); count2++)
-		{	
-			
-			reco::Muon trailingMuon = myLeptons2[count2];
-
-			//TLorentz vector of the tight muon
-			mu_1.SetPtEtaPhiM(leadingMuon.pt(), leadingMuon.eta(), leadingMuon.phi(), leadingMuon.mass());
-			//TLorentz vector of the loose muon
-			mu_2.SetPtEtaPhiM(trailingMuon.pt(), trailingMuon.eta(), trailingMuon.phi(), trailingMuon.mass());
-			//Invariant Mass and other Kinematics Variables
-			M = (mu_1+mu_2).Mag();		
-			Pt = (mu_1+mu_2).Pt();      //transverse momentum muon pair
-			Eta = (mu_1+mu_2).Eta();      //Pseudo-Rapidity muon pair
-			Rapidity = (mu_1+mu_2).Rapidity(); //Rapidity muon pair
-
-			//Fill Vectors
-			VectorleadingMuon_Pt.push_back(leadingMuon.pt());
-			VectorleadingMuon_Eta.push_back(leadingMuon.eta());
-			VectorleadingMuon_Phi.push_back(leadingMuon.phi());
-			VectorleadingMuon_Charge.push_back(leadingMuon.charge());
-			VectorleadingMuon_Mass.push_back(leadingMuon.mass());
-
-			VectortrailingMuon_Pt.push_back(trailingMuon.pt());
-			VectortrailingMuon_Eta.push_back(trailingMuon.eta());
-			VectortrailingMuon_Phi.push_back(trailingMuon.phi());
-			VectortrailingMuon_Charge.push_back(trailingMuon.charge());
-			VectortrailingMuon_Mass.push_back(trailingMuon.mass());
-
-			//They must have opposite charges (In the case of a resonance with charge 0, of ouse)
-			if( leadingMuon.charge() != trailingMuon.charge() ) continue;
-
-			std::cout << "Resonance Window" << std::endl;
-			//Resonance window
-			if( (M < 2.8) && (M > 3.2)  ) continue;
-
-			//Resonance peak
-			if( (M < 3.07) && (M > 3.12) ) continue;
-			
-			if( !trailingMuon.isPFMuon() && !trailingMuon.isGlobalMuon() && trailingMuon.globalTrack()->normalizedChi2() > 10 && trailingMuon.globalTrack()->hitPattern().numberOfValidMuonHits() < 0 && trailingMuon.numberOfMatchedStations() < 2 && fabs(trailingMuon.outerTrack()->dxy()) > 0.2 ) continue;
-			countTotalLeadingMu++;
-
-			std::cout << "Efficience of the probe" << std::endl;
-			//Efficience of the tracks (loose muons) passing throught the muon criteria (tight muons)
-			Eff_prob =+ countProbes / countTotalLeadingMu ;
-
-		}
-	}
-
-
-	//std::sort(myLeptons.begin(),myLeptons.end(), [](const reco::Muon &a, const reco::Muon &b)
-	//{
-	//	return a.pt() > b.pt();
-	//});
-
-	
-	/*
+	//==========================================================================
+	// Dimuon Selection - Get the two muons with highest pT to make a pair
+	//==========================================================================
 	// dimuon selection
 	if (myLeptons.size() >= 2) 
 	{ //loop ndimuon
 		
 		nDimuon++;
 		if(verbose_) std::cout<<"RECO  Muons Multiplicity:  " << myLeptons.size() << std::endl;
-		reco::Muon leadingMuon = myLeptons[0];
-		reco::Muon trailingMuon = myLeptons[1];
-		
-		if(verbose_) std::cout<< "Leading Muon pt, eta, phi, charge = " << leadingMuon.pt() << " "<< leadingMuon.eta() << " "<< leadingMuon.phi() << " " << leadingMuon.charge() << std::endl;
-		if(verbose_) std::cout<< "Trailing Muon  pt, eta, phi,charge = " << trailingMuon.pt() << " " << trailingMuon.eta() << " " << trailingMuon.phi() << " " << trailingMuon.charge()<< std::endl;
+		reco::Muon leadingMuon = myLeptons[0];//first
+		reco::Muon trailingMuon = myLeptons[1];//second
 
+		if( leadingMuon.isGlobalMuon() /*&& tightmuon */)
+		{
+			//Fill Vectors
+			VectorTagMuon_Pt.push_back(leadingMuon.pt());
+			VectorTagMuon_Eta.push_back(leadingMuon.eta());
+			VectorTagMuon_Phi.push_back(leadingMuon.phi());
+			VectorTagMuon_Charge.push_back(leadingMuon.charge());
+			VectorTagMuon_Mass.push_back(leadingMuon.mass());
+
+			VectorProbeMuon_Pt.push_back(trailingMuon.pt());
+			VectorProbeMuon_Eta.push_back(trailingMuon.eta());
+			VectorProbeMuon_Phi.push_back(trailingMuon.phi());
+			VectorProbeMuon_Charge.push_back(trailingMuon.charge());
+			VectorProbeMuon_Mass.push_back(trailingMuon.mass());
+
+		}
+		else  //else if
+		{
+			//Fill Vectors
+			VectorTagMuon_Pt.push_back(trailingMuon.pt());
+			VectorTagMuon_Eta.push_back(trailingMuon.eta());
+			VectorTagMuon_Phi.push_back(trailingMuon.phi());
+			VectorTagMuon_Charge.push_back(trailingMuon.charge());
+			VectorTagMuon_Mass.push_back(trailingMuon.mass());
+
+			VectorProbeMuon_Pt.push_back(leadingMuon.pt());
+			VectorProbeMuon_Eta.push_back(leadingMuon.eta());
+			VectorProbeMuon_Phi.push_back(leadingMuon.phi());
+			VectorProbeMuon_Charge.push_back(leadingMuon.charge());
+			VectorProbeMuon_Mass.push_back(leadingMuon.mass());
+		}
+		
 		//Loretz Vector of the Muons
 		mu_1.SetPtEtaPhiM(leadingMuon.pt(), leadingMuon.eta(), leadingMuon.phi(), leadingMuon.mass());
 		mu_2.SetPtEtaPhiM(trailingMuon.pt(), trailingMuon.eta(), trailingMuon.phi(), trailingMuon.mass());
-		//mu1mu2 = mu_1 + mu_2;
-		//M = mu1mu2.M();
-		M = (mu_1+mu_2).Mag();		//Massa Invariante #mu#mu of two Particles
 
-		//Opposite charges
-		if( leadingMuon.charge() != trailingMuon.charge() ) continue;
-
-		//Ressonance window
-		if( (M < 2.8) && (M > 3.2)  ) continue;
-
+		//Massa Invariante #mu#mu of two Particles
+		M = (mu_1+mu_2).Mag();		
+		VectorMll.push_back(M);
+		
 		//loose Muon criteria
 		countTotalLeadingMu++;
 		//if(!trailingMuon.isGlobalMuon()) continue;
-		if(!trailingMuon.isTrackerMuon()) continue;
-		if(!trailingMuon.isPFMuon()) continue;
+		//if(!trailingMuon.isTrackerMuon()) continue;
+		//if(!trailingMuon.isPFMuon()) continue;
 		countProbes++;
 
 		//Efficience of the probes
@@ -657,36 +507,15 @@ void JpsiAnalyzerOpen2011::analyze(const edm::Event& iEvent, const edm::EventSet
 
 		//Tight Muon criteria
 		//if(!leadingMuon.isGlobalMuon()) continue;
-		if(leadingMuon.globalTrack()->normalizedChi2() > 10) continue;
-		if(leadingMuon.globalTrack()->hitPattern().numberOfValidMuonHits() <= 0) continue; 
-		if(leadingMuon.numberOfMatchedStations() < 2) continue; 
-		//if(leadingMuon.innerTrack()->hitPattern().numberOfValidTrackerHits() < 10) continue;
-		//if(leadingMuon.innerTrack()->normalizedChi2() > 1.8) continue;
-		if( fabs(leadingMuon.outerTrack()->dxy()) > 0.2) continue;
-		//if( (fabs(leadingMuon.innerTrack()->dxy(vertex->position())) > 0.2) && (fabs(leadingMuon.innerTrack()->dz(vertex->position())) > 0.2) ) continue;
+		//if(leadingMuon.globalTrack()->normalizedChi2() > 10) continue;
+		//if(leadingMuon.globalTrack()->hitPattern().numberOfValidMuonHits() <= 0) continue; 
+		//if(leadingMuon.numberOfMatchedStations() < 2) continue; 
+		//if( fabs(leadingMuon.outerTrack()->dxy()) > 0.2) continue;
 		//if (!leadingMuon.isPFMuon()) continue;
-
-		//Fill Histograms
-		//leadingMuon_Pt->Fill(leadingMuon.pt());
-		
-		//trailingMuon_Pt->Fill(trailingMuon.pt());
-		
-		//Fill Vectors
-		VectorleadingMuon_Pt.push_back(leadingMuon.pt());
-		VectorleadingMuon_Eta.push_back(leadingMuon.eta());
-		VectorleadingMuon_Phi.push_back(leadingMuon.phi());
-		VectorleadingMuon_Charge.push_back(leadingMuon.charge());
-		VectorleadingMuon_Mass.push_back(leadingMuon.mass());
-
-		VectortrailingMuon_Pt.push_back(trailingMuon.pt());
-		VectortrailingMuon_Eta.push_back(trailingMuon.eta());
-		VectortrailingMuon_Phi.push_back(trailingMuon.phi());
-		VectortrailingMuon_Charge.push_back(trailingMuon.charge());
-		VectortrailingMuon_Mass.push_back(trailingMuon.mass());
-
+			
 		
 
-	}//end loop ndimuons*/
+	}//end loop ndimuons
 	
 	}//end //triggerfired
 
@@ -712,70 +541,6 @@ JpsiAnalyzerOpen2011::beginJob()
 	AnalysisTree->Branch("TriggeredFiredID", &countInTriggered, "countInTriggered/I");
      
 	AnalysisTree->Branch("Muons", &CounterMuons, "CounterMuons/I");
-	AnalysisTree->Branch("TrackerMuon", &TrackerMuon, "TrackerMuon/I");
-	AnalysisTree->Branch("GlobalMuon", &GlobalMuon, "GlobalMuon/I");
-
-	AnalysisTree->Branch("VectorMuon_Pt","std::vector<double>", &VectorMuon_Pt);
-	AnalysisTree->Branch("VectorMuon_Eta","std::vector<double>", &VectorMuon_Eta);
-	AnalysisTree->Branch("VectorMuon_Phi","std::vector<double>", &VectorMuon_Phi);
-	AnalysisTree->Branch("VectorMuon_Charge","std::vector<int>", &VectorMuon_Charge);
-	AnalysisTree->Branch("VectorMuon_Mass","std::vector<double>", &VectorMuon_Mass);
-
-	AnalysisTree->Branch("TMOneStationTight", &TMOneStationTight, "TMOneStationTight/I");
-
-	AnalysisTree->Branch("VectorMuonTight_Pt","std::vector<double>", &VectorMuonTight_Pt);
-	AnalysisTree->Branch("VectorMuonTight_Eta","std::vector<double>", &VectorMuonTight_Eta);
-	AnalysisTree->Branch("VectorMuonTight_Phi","std::vector<double>", &VectorMuonTight_Phi);
-	AnalysisTree->Branch("VectorMuonTight_Charge","std::vector<int>", &VectorMuonTight_Charge);
-	AnalysisTree->Branch("VectorMuonTight_Mass","std::vector<double>", &VectorMuonTight_Mass);
-
-	AnalysisTree->Branch("NumberOfValidMuonHits", &NumberOfValidMuonHits, "NumberOfValidMuonHits/I");
-
-	AnalysisTree->Branch("VectorMuonTightValidHits_Pt","std::vector<double>", &VectorMuonTightValidHits_Pt);
-	AnalysisTree->Branch("VectorMuonTightValidHits_Eta","std::vector<double>", &VectorMuonTightValidHits_Eta);
-	AnalysisTree->Branch("VectorMuonTightValidHits_Phi","std::vector<double>", &VectorMuonTightValidHits_Phi);
-	AnalysisTree->Branch("VectorMuonTightValidHits_Charge","std::vector<int>", &VectorMuonTightValidHits_Charge);
-	AnalysisTree->Branch("VectorMuonTightValidHits_Mass","std::vector<double>", &VectorMuonTightValidHits_Mass);
-
-	AnalysisTree->Branch("pixelLayersWithMeasurement", &pixelLayersWithMeasurement, "pixelLayersWithMeasurement/I");
-
-	AnalysisTree->Branch("VectorMuonTightValidHitsPixelLayer_Pt","std::vector<double>", &VectorMuonTightValidHitsPixelLayer_Pt);
-	AnalysisTree->Branch("VectorMuonTightValidHitsPixelLayer_Eta","std::vector<double>", &VectorMuonTightValidHitsPixelLayer_Eta);
-	AnalysisTree->Branch("VectorMuonTightValidHitsPixelLayer_Phi","std::vector<double>", &VectorMuonTightValidHitsPixelLayer_Phi);
-	AnalysisTree->Branch("VectorMuonTightValidHitsPixelLayer_Charge","std::vector<int>", &VectorMuonTightValidHitsPixelLayer_Charge);
-	AnalysisTree->Branch("VectorMuonTightValidHitsPixelLayer_Mass","std::vector<double>", &VectorMuonTightValidHitsPixelLayer_Mass);
-
-	AnalysisTree->Branch("normalizedChi2", &normalizedChi2, "normalizedChi2/I");
-
-	AnalysisTree->Branch("VectorMuonTightValidHitsPixelLayerChi2_Pt","std::vector<double>", &VectorMuonTightValidHitsPixelLayerChi2_Pt);
-	AnalysisTree->Branch("VectorMuonTightValidHitsPixelLayerChi2_Eta","std::vector<double>", &VectorMuonTightValidHitsPixelLayerChi2_Eta);
-	AnalysisTree->Branch("VectorMuonTightValidHitsPixelLayerChi2_Phi","std::vector<double>", &VectorMuonTightValidHitsPixelLayerChi2_Phi);
-	AnalysisTree->Branch("VectorMuonTightValidHitsPixelLayerChi2_Charge","std::vector<int>", &VectorMuonTightValidHitsPixelLayerChi2_Charge);
-	AnalysisTree->Branch("VectorMuonTightValidHitsPixelLayerChi2_Mass","std::vector<double>", &VectorMuonTightValidHitsPixelLayerChi2_Mass);
-
-	AnalysisTree->Branch("db_dz", &db_dz, "db_dz/I");
-
-	AnalysisTree->Branch("VectorMuonTightValidHitsPixelLayerChi2DbDz_Pt","std::vector<double>", &VectorMuonTightValidHitsPixelLayerChi2DbDz_Pt);
-	AnalysisTree->Branch("VectorMuonTightValidHitsPixelLayerChi2DbDz_Eta","std::vector<double>", &VectorMuonTightValidHitsPixelLayerChi2DbDz_Eta);
-	AnalysisTree->Branch("VectorMuonTightValidHitsPixelLayerChi2DbDz_Phi","std::vector<double>", &VectorMuonTightValidHitsPixelLayerChi2DbDz_Phi);
-	AnalysisTree->Branch("VectorMuonTightValidHitsPixelLayerChi2DbDz_Charge","std::vector<int>", &VectorMuonTightValidHitsPixelLayerChi2DbDz_Charge);
-	AnalysisTree->Branch("VectorMuonTightValidHitsPixelLayerChi2DbDz_Mass","std::vector<double>", &VectorMuonTightValidHitsPixelLayerChi2DbDz_Mass);
-
-	AnalysisTree->Branch("PFMuon", &PFMuon, "PFMuon/I");
-
-	AnalysisTree->Branch("VectorMuonTightValidHitsPixelLayerChi2DbDzPf_Pt","std::vector<double>", &VectorMuonTightValidHitsPixelLayerChi2DbDzPf_Pt);
-	AnalysisTree->Branch("VectorMuonTightValidHitsPixelLayerChi2DbDzPf_Eta","std::vector<double>", &VectorMuonTightValidHitsPixelLayerChi2DbDzPf_Eta);
-	AnalysisTree->Branch("VectorMuonTightValidHitsPixelLayerChi2DbDzPf_Phi","std::vector<double>", &VectorMuonTightValidHitsPixelLayerChi2DbDzPf_Phi);
-	AnalysisTree->Branch("VectorMuonTightValidHitsPixelLayerChi2DbDzPf_Charge","std::vector<int>", &VectorMuonTightValidHitsPixelLayerChi2DbDzPf_Charge);
-	AnalysisTree->Branch("VectorMuonTightValidHitsPixelLayerChi2DbDzPf_Mass","std::vector<double>", &VectorMuonTightValidHitsPixelLayerChi2DbDzPf_Mass);
-
-	AnalysisTree->Branch("TrackerGlobalMuon", &TrackerGlobalMuon, "TrackerGlobalMuon/I");
-
-	AnalysisTree->Branch("VectorMuonTightValidHitsPixelLayerChi2DbDzPfTG_Pt","std::vector<double>", &VectorMuonTightValidHitsPixelLayerChi2DbDzPfTG_Pt);
-	AnalysisTree->Branch("VectorMuonTightValidHitsPixelLayerChi2DbDzPfTG_Eta","std::vector<double>", &VectorMuonTightValidHitsPixelLayerChi2DbDzPfTG_Eta);
-	AnalysisTree->Branch("VectorMuonTightValidHitsPixelLayerChi2DbDzPfTG_Phi","std::vector<double>", &VectorMuonTightValidHitsPixelLayerChi2DbDzPfTG_Phi);
-	AnalysisTree->Branch("VectorMuonTightValidHitsPixelLayerChi2DbDzPfTG_Charge","std::vector<int>", &VectorMuonTightValidHitsPixelLayerChi2DbDzPfTG_Charge);
-	AnalysisTree->Branch("VectorMuonTightValidHitsPixelLayerChi2DbDzPfTG_Mass","std::vector<double>", &VectorMuonTightValidHitsPixelLayerChi2DbDzPfTG_Mass);
 
 	AnalysisTree->Branch("nDimuon", &nDimuon, "nDimuon/I");
 
@@ -783,23 +548,25 @@ JpsiAnalyzerOpen2011::beginJob()
 	AnalysisTree->Branch("VectorRun","std::vector<int>", &VectorRun);
 	AnalysisTree->Branch("VectorlumiBlock","std::vector<int>", &VectorlumiBlock);
 
+	AnalysisTree->Branch("leadingMuon_Pt","std::vector<double>", &VectorTagMuon_Pt);
+	AnalysisTree->Branch("leadingMuon_Eta","std::vector<double>", &VectorTagMuon_Eta);
+	AnalysisTree->Branch("leadingMuon_Phi","std::vector<double>", &VectorTagMuon_Phi);
+	AnalysisTree->Branch("leadingMuon_Charge","std::vector<int>", &VectorTagMuon_Charge);
+	AnalysisTree->Branch("leadingMuon_Mass","std::vector<double>", &VectorTagMuon_Mass);
 
-	AnalysisTree->Branch("leadingMuon_Pt","std::vector<double>", &VectorleadingMuon_Pt);
-	AnalysisTree->Branch("leadingMuon_Eta","std::vector<double>", &VectorleadingMuon_Eta);
-	AnalysisTree->Branch("leadingMuon_Phi","std::vector<double>", &VectorleadingMuon_Phi);
-	AnalysisTree->Branch("leadingMuon_Charge","std::vector<int>", &VectorleadingMuon_Charge);
-	AnalysisTree->Branch("leadingMuon_Mass","std::vector<double>", &VectorleadingMuon_Mass);
-
-	AnalysisTree->Branch("trailingMuon_Pt","std::vector<double>", &VectortrailingMuon_Pt);
-	AnalysisTree->Branch("trailingMuon_Eta","std::vector<double>", &VectortrailingMuon_Eta);
-	AnalysisTree->Branch("trailingMuon_Phi","std::vector<double>", &VectortrailingMuon_Phi);
-	AnalysisTree->Branch("trailingMuon_Charge","std::vector<int>", &VectortrailingMuon_Charge);
-	AnalysisTree->Branch("trailingMuon_Mass","std::vector<double>", &VectortrailingMuon_Mass);
+	AnalysisTree->Branch("trailingMuon_Pt","std::vector<double>", &VectorProbeMuon_Pt);
+	AnalysisTree->Branch("trailingMuon_Eta","std::vector<double>", &VectorProbeMuon_Eta);
+	AnalysisTree->Branch("trailingMuon_Phi","std::vector<double>", &VectorProbeMuon_Phi);
+	AnalysisTree->Branch("trailingMuon_Charge","std::vector<int>", &VectorProbeMuon_Charge);
+	AnalysisTree->Branch("trailingMuon_Mass","std::vector<double>", &VectorProbeMuon_Mass);
 
 	AnalysisTree->Branch("Mll","std::vector<double>", &VectorMll);
 	AnalysisTree->Branch("MllpT","std::vector<double>", &VectorMllpT);
 	AnalysisTree->Branch("Mlleta","std::vector<double>", &VectorMlleta);
 	AnalysisTree->Branch("Mllphi","std::vector<double>", &VectorMllphi);
+
+	AnalysisTree->Branch("Mll","std::vector<double>", &ResonancePeak);
+	
 
 }
 
@@ -822,8 +589,7 @@ JpsiAnalyzerOpen2011::endJob()
         	std::cout<<"Paths: " <<  triggerName_[i] << std::endl;
         }
         std::cout<<"N of Evts using Trigger Fired :"<< countInTriggered << std::endl;
-    }
- 
+   }
 	std::cout << "Muons Multiplicity: " << CounterMuons << std::endl;
 	std::cout << "TMOneStationTight: "<< TMOneStationTight<<std::endl;
 	std::cout << "NumberOfValidMuonHits: " << NumberOfValidMuonHits << std::endl;
