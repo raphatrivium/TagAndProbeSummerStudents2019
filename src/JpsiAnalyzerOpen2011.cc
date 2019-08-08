@@ -90,6 +90,8 @@ class JpsiAnalyzerOpen2011 : public edm::EDAnalyzer {
 		// ----------member data ---------------------------
 
 		TTree* AnalysisTree;
+		TTree* PlotControl;
+		//CREAT another three
 
 		
 
@@ -116,19 +118,8 @@ class JpsiAnalyzerOpen2011 : public edm::EDAnalyzer {
 		int Total_Events = 0;
 		int CounterMuons = 0;
 		int TrackerMuon	= 0;
-		int GlobalMuon = 0;
-		int TMOneStationTight = 0;
-		int NumberOfValidMuonHits = 0;
-		int pixelLayersWithMeasurement = 0;
-		int normalizedChi2 = 0;
-		int db_dz = 0;
-		int PFMuon = 0; 
-		int TrackerGlobalMuon = 0;
 		int nDimuon = 0;
-		int countProbes = 0; 
-		int countTotalLeadingMu = 0; 
-
-		double Eff_prob = 0.;
+		int countLooseMuons = 0; 
 
 		//Lorentz Vector
 		TLorentzVector mu_1;
@@ -143,6 +134,9 @@ class JpsiAnalyzerOpen2011 : public edm::EDAnalyzer {
 		//Trigger
 		int countInAccepted = 0;
 		int countInTriggered = 0 ;
+
+
+		double ProbeMuon_Pt = 0;
 
 		//Creating Vectors
 		std::vector<int> VectorEvent;
@@ -166,7 +160,12 @@ class JpsiAnalyzerOpen2011 : public edm::EDAnalyzer {
 		std::vector<double> VectorMlleta;
 		std::vector<double> VectorMllphi;
 
-		std::vector<double> ResonancePeak;
+		std::vector<int> VectorPassingProbe;
+		std::vector<int> PassingProbeTrackingMuon;
+		std::vector<int> PassingProbeStandAloneMuon;
+		std::vector<int> PassingProbeIDMuon;
+
+
 
 };
 
@@ -202,13 +201,13 @@ JpsiAnalyzerOpen2011::JpsiAnalyzerOpen2011(const edm::ParameterSet& iConfig):
 
 	// Define Histos
 	TH1D::SetDefaultSumw2();
-
 	//HistoMuon_Pt = fs->make<TH1F>("HistoMuon_Pt"  , "Muon_Pt"  ,   100,   0., 200.);
 	
 	
-
 	//Define Trees
 	AnalysisTree = fs->make<TTree>("AnalysisTree","Muon Analysis Tree");
+	PlotControl = fs->make<TTree>("PlotControl","Muon Analysis Tree");
+	
 
 }
 
@@ -238,7 +237,12 @@ JpsiAnalyzerOpen2011::~JpsiAnalyzerOpen2011()
 	std::vector<double>().swap(VectorMlleta);
 	std::vector<double>().swap(VectorMllphi);
 
-	std::vector<double>().swap(ResonancePeak);
+	std::vector<int>().swap(VectorPassingProbe);
+	std::vector<int>().swap(PassingProbeTrackingMuon);
+	std::vector<int>().swap(PassingProbeStandAloneMuon);
+	std::vector<int>().swap(PassingProbeIDMuon);
+	
+	
 	
 
 }
@@ -350,13 +354,7 @@ void JpsiAnalyzerOpen2011::analyze(const edm::Event& iEvent, const edm::EventSet
 	edm::Handle< reco::MuonCollection > recoMuons;
 	iEvent.getByLabel(recoMuons_, recoMuons);
 	//is valid method
-
-	//Accessing Track Collection
-	//edm::Handle<reco::TrackCollection> tracks;
-   //iEvent.getByLabel("generalTracks", tracks);
-
-	
-        
+       
    Total_Events++;
 
 	//------------------------------------------------------------------
@@ -408,8 +406,6 @@ void JpsiAnalyzerOpen2011::analyze(const edm::Event& iEvent, const edm::EventSet
 		else {
 		if (triggerFound) std::cout << " WARNING: path found in TriggerResults but it does not exist in HLTR" << std::endl;
 		}
-
-    
 	
     //}// end trigger slection
 	//------------------------------------------------------------------
@@ -429,17 +425,13 @@ void JpsiAnalyzerOpen2011::analyze(const edm::Event& iEvent, const edm::EventSet
 		//---------------------------------------------------------------------------
 		//Loose Muon Criteria
 		//---------------------------------------------------------------------------
-		if ( !muon->isTrackerMuon() ) continue;
-		countProbes++;
-		
-		//if (verbose_) std::cout<< " dxy: "<< fabs(muon->innerTrack()->dxy(vertex->position()))  << std::endl; 
-		//if (verbose_) std::cout<< " dz: "<< fabs(muon->innerTrack()->dz(vertex->position()))  << std::endl;
-
+		//As loose muon criteria we only select muons of the muon collection
+	
 		//if (muon::isTightMuon(*muon, vtx) ) continue;
 
 		myLeptons.push_back(*muon); //fill
 
-	}//End Tight Muon Loop
+	}//End  Muon Loop
 
 	//==========================================================================
 	// sort the muons of highest pt to lowest 
@@ -449,79 +441,134 @@ void JpsiAnalyzerOpen2011::analyze(const edm::Event& iEvent, const edm::EventSet
 		return a.pt() > b.pt();
 	});
 
-	//==========================================================================
 	// Dimuon Selection - Get the two muons with highest pT to make a pair
 	//==========================================================================
-	// dimuon selection
 	if (myLeptons.size() >= 2) 
-	{ //loop ndimuon
+	{ // Dimuon
 		
 		nDimuon++;
 		if(verbose_) std::cout<<"RECO  Muons Multiplicity:  " << myLeptons.size() << std::endl;
-		reco::Muon leadingMuon = myLeptons[0];//first
-		reco::Muon trailingMuon = myLeptons[1];//second
+		reco::Muon leadingMuon = myLeptons[0];//first muon - with highest Pt
+		reco::Muon trailingMuon = myLeptons[1];//second muon - with the second highest Pt
 
-		if( muon::isTightMuon(leadingMuon, vtx) )
-		{
-			//Fill Vectors
-			VectorTagMuon_Pt.push_back(leadingMuon.pt());
-			VectorTagMuon_Eta.push_back(leadingMuon.eta());
-			VectorTagMuon_Phi.push_back(leadingMuon.phi());
-			VectorTagMuon_Charge.push_back(leadingMuon.charge());
-			VectorTagMuon_Mass.push_back(leadingMuon.mass());
-
-			VectorProbeMuon_Pt.push_back(trailingMuon.pt());
-			VectorProbeMuon_Eta.push_back(trailingMuon.eta());
-			VectorProbeMuon_Phi.push_back(trailingMuon.phi());
-			VectorProbeMuon_Charge.push_back(trailingMuon.charge());
-			VectorProbeMuon_Mass.push_back(trailingMuon.mass());
-
-		}
-		else if (muon::isTightMuon(trailingMuon, vtx) ) 
-		{
-			//Fill Vectors
-			VectorTagMuon_Pt.push_back(trailingMuon.pt());
-			VectorTagMuon_Eta.push_back(trailingMuon.eta());
-			VectorTagMuon_Phi.push_back(trailingMuon.phi());
-			VectorTagMuon_Charge.push_back(trailingMuon.charge());
-			VectorTagMuon_Mass.push_back(trailingMuon.mass());
-
-			VectorProbeMuon_Pt.push_back(leadingMuon.pt());
-			VectorProbeMuon_Eta.push_back(leadingMuon.eta());
-			VectorProbeMuon_Phi.push_back(leadingMuon.phi());
-			VectorProbeMuon_Charge.push_back(leadingMuon.charge());
-			VectorProbeMuon_Mass.push_back(leadingMuon.mass());
-		}
-		
 		//Loretz Vector of the Muons
 		mu_1.SetPtEtaPhiM(leadingMuon.pt(), leadingMuon.eta(), leadingMuon.phi(), leadingMuon.mass());
 		mu_2.SetPtEtaPhiM(trailingMuon.pt(), trailingMuon.eta(), trailingMuon.phi(), trailingMuon.mass());
-
+	
 		//Massa Invariante #mu#mu of two Particles
-		M = (mu_1+mu_2).Mag();		
-		VectorMll.push_back(M);
+		M = (mu_1+mu_2).Mag();	
+
+		//Oppossite Charge - The ressonance has charge 0, so the two bodies decay must have oppostite charges
+		if ( leadingMuon.charge() == trailingMuon.charge() )	continue;
 		
-		//loose Muon criteria
-		countTotalLeadingMu++;
-		//if(!trailingMuon.isGlobalMuon()) continue;
-		//if(!trailingMuon.isTrackerMuon()) continue;
-		//if(!trailingMuon.isPFMuon()) continue;
-		countProbes++;
-
-		//Efficience of the probes
-		Eff_prob =+ countProbes / countTotalLeadingMu ;
-
-		//Tight Muon criteria
-		//if(!leadingMuon.isGlobalMuon()) continue;
-		//if(leadingMuon.globalTrack()->normalizedChi2() > 10) continue;
-		//if(leadingMuon.globalTrack()->hitPattern().numberOfValidMuonHits() <= 0) continue; 
-		//if(leadingMuon.numberOfMatchedStations() < 2) continue; 
-		//if( fabs(leadingMuon.outerTrack()->dxy()) > 0.2) continue;
-		//if (!leadingMuon.isPFMuon()) continue;
+		//Ressonance window
+		if ( (M > 2.5) && (M < 3.6) )
+		{
 			
-		
+			//Simple variables. Not vectors.
+			//==========================================================================
+			//To apply the tight muon criteria
+			if( muon::isTightMuon(leadingMuon, vtx) )
+			{
+				//Fill Vectors
+				VectorTagMuon_Pt.push_back(leadingMuon.pt());
+				VectorTagMuon_Eta.push_back(leadingMuon.eta());
+				VectorTagMuon_Phi.push_back(leadingMuon.phi());
+				VectorTagMuon_Charge.push_back(leadingMuon.charge());
+				VectorTagMuon_Mass.push_back(leadingMuon.mass());
 
-	}//end loop ndimuons
+				ProbeMuon_Pt = trailingMuon.pt();
+
+				VectorProbeMuon_Pt.push_back(trailingMuon.pt());
+				VectorProbeMuon_Eta.push_back(trailingMuon.eta());
+				VectorProbeMuon_Phi.push_back(trailingMuon.phi());
+				VectorProbeMuon_Charge.push_back(trailingMuon.charge());
+				VectorProbeMuon_Mass.push_back(trailingMuon.mass());
+
+				VectorMll.push_back(M); //Fill vector
+
+				//For tracking Muon Efficience
+				if ( trailingMuon.isTrackerMuon() )
+				{
+					PassingProbeTrackingMuon.push_back(1);
+				}
+				else
+				{
+					PassingProbeTrackingMuon.push_back(0);
+				}
+
+				//For StandAlone Muon Efficience
+				if (  trailingMuon.isStandAloneMuon() )
+				{
+            	PassingProbeStandAloneMuon.push_back(1);
+				}
+				else
+				{
+					PassingProbeStandAloneMuon.push_back(0);
+				}
+
+				//For ID Muon Efficience
+				if (  trailingMuon.isTrackerMuon() && trailingMuon.isStandAloneMuon() && trailingMuon.isGlobalMuon() )
+				{
+            	PassingProbeIDMuon.push_back(1);
+				}
+				else
+				{
+					PassingProbeIDMuon.push_back(0);
+				}
+			
+			}
+			//Notice that we fill as opposite way that the IF above
+			else if (muon::isTightMuon(trailingMuon, vtx) ) 
+			{
+				//Fill Vectors
+				VectorTagMuon_Pt.push_back(trailingMuon.pt());
+				VectorTagMuon_Eta.push_back(trailingMuon.eta());
+				VectorTagMuon_Phi.push_back(trailingMuon.phi());
+				VectorTagMuon_Charge.push_back(trailingMuon.charge());
+				VectorTagMuon_Mass.push_back(trailingMuon.mass());
+
+				VectorProbeMuon_Pt.push_back(leadingMuon.pt());
+				VectorProbeMuon_Eta.push_back(leadingMuon.eta());
+				VectorProbeMuon_Phi.push_back(leadingMuon.phi());
+				VectorProbeMuon_Charge.push_back(leadingMuon.charge());
+				VectorProbeMuon_Mass.push_back(leadingMuon.mass());
+				
+				//For tracking Muon Efficience
+				if ( leadingMuon.isTrackerMuon() )
+				{
+					PassingProbeTrackingMuon.push_back(1);
+				}
+				else
+				{
+					PassingProbeTrackingMuon.push_back(0);
+				}
+
+				//For StandAlone Muon Efficience
+				if (  leadingMuon.isStandAloneMuon() )
+				{
+            	PassingProbeStandAloneMuon.push_back(1);
+				}
+				else
+				{
+					PassingProbeStandAloneMuon.push_back(0);
+				}
+
+				//For ID Muon Efficience
+				if (  leadingMuon.isPFMuon() )
+				{
+            	PassingProbeIDMuon.push_back(1);
+				}
+				else
+				{
+					PassingProbeIDMuon.push_back(0);
+				}
+			
+			}
+		
+		}
+
+	}//end Dimuon
 	
 	}//end //triggerfired
 
@@ -535,44 +582,47 @@ void JpsiAnalyzerOpen2011::analyze(const edm::Event& iEvent, const edm::EventSet
 JpsiAnalyzerOpen2011::beginJob()
 {
 	//Create and Fill Branchs
-	AnalysisTree->Branch("ievt", &ievt, "ievt/I");
-	AnalysisTree->Branch("irun", &irun, "irun/I");
-	AnalysisTree->Branch("lumiblock", &lumiBlock, "lumiblock/I" );
-	AnalysisTree->Branch("Total_Events", &Total_Events, "Total_Events/I");
-	AnalysisTree->Branch("Eff_prob", &Eff_prob, "Eff_prob/D");
-        
-   //Trigger Info Branches
-	AnalysisTree->Branch("HLTriggerName", &NameTrigger);
-	AnalysisTree->Branch("TriggerAcceptedID", &countInAccepted, "countInAccepted/I");
-	AnalysisTree->Branch("TriggeredFiredID", &countInTriggered, "countInTriggered/I");
-     
-	AnalysisTree->Branch("Muons", &CounterMuons, "CounterMuons/I");
-
-	AnalysisTree->Branch("nDimuon", &nDimuon, "nDimuon/I");
-
-	AnalysisTree->Branch("VectorEvent","std::vector<int>", &VectorEvent);
-	AnalysisTree->Branch("VectorRun","std::vector<int>", &VectorRun);
-	AnalysisTree->Branch("VectorlumiBlock","std::vector<int>", &VectorlumiBlock);
-
-	AnalysisTree->Branch("leadingMuon_Pt","std::vector<double>", &VectorTagMuon_Pt);
-	AnalysisTree->Branch("leadingMuon_Eta","std::vector<double>", &VectorTagMuon_Eta);
-	AnalysisTree->Branch("leadingMuon_Phi","std::vector<double>", &VectorTagMuon_Phi);
-	AnalysisTree->Branch("leadingMuon_Charge","std::vector<int>", &VectorTagMuon_Charge);
-	AnalysisTree->Branch("leadingMuon_Mass","std::vector<double>", &VectorTagMuon_Mass);
-
-	AnalysisTree->Branch("trailingMuon_Pt","std::vector<double>", &VectorProbeMuon_Pt);
-	AnalysisTree->Branch("trailingMuon_Eta","std::vector<double>", &VectorProbeMuon_Eta);
-	AnalysisTree->Branch("trailingMuon_Phi","std::vector<double>", &VectorProbeMuon_Phi);
-	AnalysisTree->Branch("trailingMuon_Charge","std::vector<int>", &VectorProbeMuon_Charge);
-	AnalysisTree->Branch("trailingMuon_Mass","std::vector<double>", &VectorProbeMuon_Mass);
-
+	AnalysisTree->Branch("ProbeMuon_Pt", &ProbeMuon_Pt, "ProbeMuon_Pt/D");
+	AnalysisTree->Branch("VectorProbeMuon_Pt","std::vector<double>", &VectorProbeMuon_Pt);
+	AnalysisTree->Branch("VectorProbeMuon_Eta","std::vector<double>", &VectorProbeMuon_Eta);
 	AnalysisTree->Branch("Mll","std::vector<double>", &VectorMll);
-	AnalysisTree->Branch("MllpT","std::vector<double>", &VectorMllpT);
-	AnalysisTree->Branch("Mlleta","std::vector<double>", &VectorMlleta);
-	AnalysisTree->Branch("Mllphi","std::vector<double>", &VectorMllphi);
+	AnalysisTree->Branch("PassingProbeTrackingMuon","std::vector<int>", &PassingProbeTrackingMuon);
+	AnalysisTree->Branch("PassingProbeStandAloneMuon","std::vector<int>", &PassingProbeStandAloneMuon);
+	AnalysisTree->Branch("PassingProbeIDMuon","std::vector<int>", &PassingProbeIDMuon);
 
-	AnalysisTree->Branch("Mll","std::vector<double>", &ResonancePeak);
-	
+	PlotControl->Branch("ievt", &ievt, "ievt/I");
+	PlotControl->Branch("irun", &irun, "irun/I");
+	PlotControl->Branch("lumiblock", &lumiBlock, "lumiblock/I" );
+	PlotControl->Branch("Total_Events", &Total_Events, "Total_Events/I");
+      
+   //Trigger Info Branches
+	PlotControl->Branch("HLTriggerName", &NameTrigger);
+	PlotControl->Branch("TriggerAcceptedID", &countInAccepted, "countInAccepted/I");
+	PlotControl->Branch("TriggeredFiredID", &countInTriggered, "countInTriggered/I");
+     
+	PlotControl->Branch("Muons", &CounterMuons, "CounterMuons/I");
+
+	PlotControl->Branch("nDimuon", &nDimuon, "nDimuon/I");
+
+	PlotControl->Branch("VectorEvent","std::vector<int>", &VectorEvent);
+	PlotControl->Branch("VectorRun","std::vector<int>", &VectorRun);
+	PlotControl->Branch("VectorlumiBlock","std::vector<int>", &VectorlumiBlock);
+
+	PlotControl->Branch("VectorTagMuon_Pt","std::vector<double>", &VectorTagMuon_Pt);
+	PlotControl->Branch("VectorTagMuon_Eta","std::vector<double>", &VectorTagMuon_Eta);
+	PlotControl->Branch("VectorTagMuon_Phi","std::vector<double>", &VectorTagMuon_Phi);
+	PlotControl->Branch("VectorTagMuon_Charge","std::vector<int>", &VectorTagMuon_Charge);
+	PlotControl->Branch("VectorTagMuon_Mass","std::vector<double>", &VectorTagMuon_Mass);
+
+	PlotControl->Branch("VectorProbeMuon_Pt","std::vector<double>", &VectorProbeMuon_Pt);
+	PlotControl->Branch("VectorProbeMuon_Eta","std::vector<double>", &VectorProbeMuon_Eta);
+	PlotControl->Branch("VectorProbeMuon_Phi","std::vector<double>", &VectorProbeMuon_Phi);
+	PlotControl->Branch("VectorProbeMuon_Charge","std::vector<int>", &VectorProbeMuon_Charge);
+	PlotControl->Branch("VectorProbeMuon_Mass","std::vector<double>", &VectorProbeMuon_Mass);
+
+	PlotControl->Branch("MllpT","std::vector<double>", &VectorMllpT);
+	PlotControl->Branch("Mlleta","std::vector<double>", &VectorMlleta);
+	PlotControl->Branch("Mllphi","std::vector<double>", &VectorMllphi);
 
 }
 
@@ -583,11 +633,11 @@ JpsiAnalyzerOpen2011::endJob()
 {
 	//Fill the Trees
 	AnalysisTree->Fill();
- 
+ 	PlotControl->Fill();
+
 	std::cout << " " << std::endl;
 	std::cout << "*********************************************************************** " << std::endl;
 	std::cout << "Total_Events: " << Total_Events << std::endl;  
-	std::cout << "Eff_prob: " << Eff_prob << std::endl;
     if(triggerflag_)
 	{ 
     	for (unsigned int i=0; i<triggerName_.size(); i++) 
@@ -597,13 +647,6 @@ JpsiAnalyzerOpen2011::endJob()
         std::cout<<"N of Evts using Trigger Fired :"<< countInTriggered << std::endl;
    }
 	std::cout << "Muons Multiplicity: " << CounterMuons << std::endl;
-	std::cout << "TMOneStationTight: "<< TMOneStationTight<<std::endl;
-	std::cout << "NumberOfValidMuonHits: " << NumberOfValidMuonHits << std::endl;
-	std::cout << "pixelLayersWithMeasurement > 1: " << pixelLayersWithMeasurement << std::endl;
-	std::cout << "normalizedChi2: "<< normalizedChi2<<std::endl;
-	std::cout << "db < 3cm and dz < 15cm: "<< db_dz<<std::endl;
-	std::cout << "PFMuon: " << PFMuon << std::endl;
-	std::cout << "TrackerGlobalMuon: " << TrackerGlobalMuon << std::endl;
 	std::cout << "nDimuon: " << nDimuon << std::endl;
 	std::cout << "*********************************************************************** " << std::endl;
        //}

@@ -657,17 +657,9 @@ Using Trigger selection
  
 *********************************************************************** 
 Total_Events: 328
-Eff_prob: 5
 Paths: HLT_Dimuon10_Jpsi_Barrel_v
 Paths: HLT_Dimuon7_PsiPrime_v
 N of Evts using Trigger Fired :6
 Muons Multiplicity: 24
-TMOneStationTight: 0
-NumberOfValidMuonHits: 0
-pixelLayersWithMeasurement > 1: 0
-normalizedChi2: 0
-db < 3cm and dz < 15cm: 0
-PFMuon: 0
-TrackerGlobalMuon: 0
 nDimuon: 6
 *********************************************************************** 
