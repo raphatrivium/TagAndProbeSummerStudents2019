@@ -89,12 +89,10 @@ class JpsiAnalyzerOpen2011 : public edm::EDAnalyzer {
 
 		// ----------member data ---------------------------
 
+		//Declaring tree
 		TTree* AnalysisTree;
 		TTree* PlotControl;
-		//CREAT another three
-
 		
-
 		bool verbose_;
 		bool triggerflag_;
 		edm::InputTag primaryVertexProducer_;
@@ -136,7 +134,7 @@ class JpsiAnalyzerOpen2011 : public edm::EDAnalyzer {
 		int countInTriggered = 0 ;
 
 
-		double ProbeMuon_Pt = 0;
+		float ProbeMuon_Pt = 0.;
 
 		//Creating Vectors
 		std::vector<int> VectorEvent;
@@ -162,6 +160,9 @@ class JpsiAnalyzerOpen2011 : public edm::EDAnalyzer {
 
 		std::vector<int> VectorPassingProbe;
 		std::vector<int> PassingProbeTrackingMuon;
+		std::vector<double> MassPassingTagProbeTracking;
+		std::vector<double> MassFailingTagProbeTracking;
+
 		std::vector<int> PassingProbeStandAloneMuon;
 		std::vector<int> PassingProbeIDMuon;
 
@@ -203,10 +204,13 @@ JpsiAnalyzerOpen2011::JpsiAnalyzerOpen2011(const edm::ParameterSet& iConfig):
 	TH1D::SetDefaultSumw2();
 	//HistoMuon_Pt = fs->make<TH1F>("HistoMuon_Pt"  , "Muon_Pt"  ,   100,   0., 200.);
 	
-	
+
 	//Define Trees
 	AnalysisTree = fs->make<TTree>("AnalysisTree","Muon Analysis Tree");
 	PlotControl = fs->make<TTree>("PlotControl","Muon Analysis Tree");
+
+
+
 	
 
 }
@@ -239,6 +243,9 @@ JpsiAnalyzerOpen2011::~JpsiAnalyzerOpen2011()
 
 	std::vector<int>().swap(VectorPassingProbe);
 	std::vector<int>().swap(PassingProbeTrackingMuon);
+	std::vector<double>().swap(MassPassingTagProbeTracking);
+	std::vector<double>().swap(MassFailingTagProbeTracking);
+
 	std::vector<int>().swap(PassingProbeStandAloneMuon);
 	std::vector<int>().swap(PassingProbeIDMuon);
 	
@@ -477,7 +484,12 @@ void JpsiAnalyzerOpen2011::analyze(const edm::Event& iEvent, const edm::EventSet
 				VectorTagMuon_Charge.push_back(leadingMuon.charge());
 				VectorTagMuon_Mass.push_back(leadingMuon.mass());
 
+				std::cout<< " leadingMuon.pt(): "<< leadingMuon.pt() << std::endl;
+				std::cout<< " trailingMuon.pt(): "<< trailingMuon.pt() << std::endl;
+
 				ProbeMuon_Pt = trailingMuon.pt();
+
+				
 
 				VectorProbeMuon_Pt.push_back(trailingMuon.pt());
 				VectorProbeMuon_Eta.push_back(trailingMuon.eta());
@@ -491,10 +503,12 @@ void JpsiAnalyzerOpen2011::analyze(const edm::Event& iEvent, const edm::EventSet
 				if ( trailingMuon.isTrackerMuon() )
 				{
 					PassingProbeTrackingMuon.push_back(1);
+					MassPassingTagProbeTracking.push_back(M);
 				}
 				else
 				{
 					PassingProbeTrackingMuon.push_back(0);
+					MassFailingTagProbeTracking.push_back(M);
 				}
 
 				//For StandAlone Muon Efficience
@@ -538,10 +552,12 @@ void JpsiAnalyzerOpen2011::analyze(const edm::Event& iEvent, const edm::EventSet
 				if ( leadingMuon.isTrackerMuon() )
 				{
 					PassingProbeTrackingMuon.push_back(1);
+					MassPassingTagProbeTracking.push_back(M);
 				}
 				else
 				{
 					PassingProbeTrackingMuon.push_back(0);
+					MassFailingTagProbeTracking.push_back(M);
 				}
 
 				//For StandAlone Muon Efficience
@@ -563,7 +579,9 @@ void JpsiAnalyzerOpen2011::analyze(const edm::Event& iEvent, const edm::EventSet
 				{
 					PassingProbeIDMuon.push_back(0);
 				}
-			
+		
+
+
 			}
 		
 		}
@@ -574,6 +592,8 @@ void JpsiAnalyzerOpen2011::analyze(const edm::Event& iEvent, const edm::EventSet
 
 	}// loop trigger names
 
+	AnalysisTree->Fill();
+	
 }//end analize
 
 
@@ -581,12 +601,18 @@ void JpsiAnalyzerOpen2011::analyze(const edm::Event& iEvent, const edm::EventSet
 	void
 JpsiAnalyzerOpen2011::beginJob()
 {
+	PlotControl->Branch("VectorProbeMuon_Pt","std::vector<double>", &VectorProbeMuon_Pt);
 	//Create and Fill Branchs
-	AnalysisTree->Branch("ProbeMuon_Pt", &ProbeMuon_Pt, "ProbeMuon_Pt/D");
-	AnalysisTree->Branch("VectorProbeMuon_Pt","std::vector<double>", &VectorProbeMuon_Pt);
+	AnalysisTree->Branch("ProbeMuon_Pt", &ProbeMuon_Pt, "ProbeMuon_Pt/F");
+	
+	/*AnalysisTree->Branch("VectorProbeMuon_Pt","std::vector<double>", &VectorProbeMuon_Pt);
 	AnalysisTree->Branch("VectorProbeMuon_Eta","std::vector<double>", &VectorProbeMuon_Eta);
 	AnalysisTree->Branch("Mll","std::vector<double>", &VectorMll);
 	AnalysisTree->Branch("PassingProbeTrackingMuon","std::vector<int>", &PassingProbeTrackingMuon);
+	AnalysisTree->Branch("MassPassingTagProbeTracking","std::vector<double>", &MassPassingTagProbeTracking);
+	AnalysisTree->Branch("MassFailingTagProbeTracking","std::vector<double>", &MassFailingTagProbeTracking);
+
+
 	AnalysisTree->Branch("PassingProbeStandAloneMuon","std::vector<int>", &PassingProbeStandAloneMuon);
 	AnalysisTree->Branch("PassingProbeIDMuon","std::vector<int>", &PassingProbeIDMuon);
 
@@ -622,7 +648,7 @@ JpsiAnalyzerOpen2011::beginJob()
 
 	PlotControl->Branch("MllpT","std::vector<double>", &VectorMllpT);
 	PlotControl->Branch("Mlleta","std::vector<double>", &VectorMlleta);
-	PlotControl->Branch("Mllphi","std::vector<double>", &VectorMllphi);
+	PlotControl->Branch("Mllphi","std::vector<double>", &VectorMllphi);*/
 
 }
 
@@ -632,7 +658,7 @@ JpsiAnalyzerOpen2011::beginJob()
 JpsiAnalyzerOpen2011::endJob()
 {
 	//Fill the Trees
-	AnalysisTree->Fill();
+	//AnalysisTree->Fill();
  	PlotControl->Fill();
 
 	std::cout << " " << std::endl;

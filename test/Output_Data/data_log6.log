@@ -37,6 +37,8 @@ Using Trigger selection
 Using Trigger selection 
  WARNING: path HLT_Dimuon7_PsiPrime_v out of range in TriggerResults
 Using Trigger selection 
+ leadingMuon.pt(): 24.3924
+ trailingMuon.pt(): 9.53561
  WARNING: path HLT_Dimuon7_PsiPrime_v out of range in TriggerResults
 Using Trigger selection 
  WARNING: path HLT_Dimuon7_PsiPrime_v out of range in TriggerResults
@@ -101,6 +103,8 @@ Using Trigger selection
 Using Trigger selection 
  WARNING: path HLT_Dimuon7_PsiPrime_v out of range in TriggerResults
 Using Trigger selection 
+ leadingMuon.pt(): 8.54894
+ trailingMuon.pt(): 8.22167
  WARNING: path HLT_Dimuon7_PsiPrime_v out of range in TriggerResults
 Using Trigger selection 
  WARNING: path HLT_Dimuon7_PsiPrime_v out of range in TriggerResults
@@ -141,6 +145,8 @@ Using Trigger selection
 Using Trigger selection 
  WARNING: path HLT_Dimuon7_PsiPrime_v out of range in TriggerResults
 Using Trigger selection 
+ leadingMuon.pt(): 9.40112
+ trailingMuon.pt(): 7.87427
  WARNING: path HLT_Dimuon7_PsiPrime_v out of range in TriggerResults
 Using Trigger selection 
  WARNING: path HLT_Dimuon7_PsiPrime_v out of range in TriggerResults
