@@ -117,6 +117,7 @@ class JpsiAnalyzerOpen2011 : public edm::EDAnalyzer {
 		int CounterMuons = 0;
 		int TrackerMuon	= 0;
 		int nDimuon = 0;
+		int TagAndProbes = 0;
 		int countLooseMuons = 0; 
 
 		//Lorentz Vector
@@ -133,38 +134,27 @@ class JpsiAnalyzerOpen2011 : public edm::EDAnalyzer {
 		int countInAccepted = 0;
 		int countInTriggered = 0 ;
 
+		double TagMuon_Pt;
+		double TagMuon_Eta;
+		double TagMuon_Phi;
+		
+		double ProbeMuon_Pt;
+		double ProbeMuon_Eta;
+		double ProbeMuon_Phi;
+		
+		int PassingProbeTrackingMuon;
+		double MassPassingTagProbeTracking;
+		double MassFailingTagProbeTracking;
 
-		float ProbeMuon_Pt = 0.;
+		double PassingProbeStandAloneMuon;
+
+		double PassingProbeIDMuon;
 
 		//Creating Vectors
-		std::vector<int> VectorEvent;
-		std::vector<int> VectorRun;
-		std::vector<int> VectorlumiBlock;
-	
-		std::vector<double> VectorTagMuon_Pt;
-		std::vector<double> VectorTagMuon_Eta;
-		std::vector<double> VectorTagMuon_Phi;
-		std::vector<int> VectorTagMuon_Charge;
-		std::vector<double> VectorTagMuon_Mass;
 
-		std::vector<double> VectorProbeMuon_Pt;
-		std::vector<double> VectorProbeMuon_Eta;
-		std::vector<double> VectorProbeMuon_Phi;
-		std::vector<int> VectorProbeMuon_Charge;
-		std::vector<double> VectorProbeMuon_Mass;
 
-		std::vector<double> VectorMll;
-		std::vector<double> VectorMllpT;
-		std::vector<double> VectorMlleta;
-		std::vector<double> VectorMllphi;
 
-		std::vector<int> VectorPassingProbe;
-		std::vector<int> PassingProbeTrackingMuon;
-		std::vector<double> MassPassingTagProbeTracking;
-		std::vector<double> MassFailingTagProbeTracking;
-
-		std::vector<int> PassingProbeStandAloneMuon;
-		std::vector<int> PassingProbeIDMuon;
+		
 
 
 
@@ -223,34 +213,23 @@ JpsiAnalyzerOpen2011::~JpsiAnalyzerOpen2011()
 	// (e.g. close files, deallocate resources etc.)
     std::vector<std::string>().swap(NameTrigger);
 	
-
-	std::vector<double>().swap(VectorTagMuon_Pt);
-	std::vector<double>().swap(VectorTagMuon_Eta);
-	std::vector<double>().swap(VectorTagMuon_Phi);
-	std::vector<int>().swap(VectorTagMuon_Charge);
-	std::vector<double>().swap(VectorTagMuon_Mass);
-
-	std::vector<double>().swap(VectorProbeMuon_Pt);
-	std::vector<double>().swap(VectorProbeMuon_Eta);
-	std::vector<double>().swap(VectorProbeMuon_Phi);
-	std::vector<int>().swap(VectorProbeMuon_Charge);
-	std::vector<double>().swap(VectorProbeMuon_Mass);
-
-	std::vector<double>().swap(VectorMll);
-	std::vector<double>().swap(VectorMllpT);
-	std::vector<double>().swap(VectorMlleta);
-	std::vector<double>().swap(VectorMllphi);
-
-	std::vector<int>().swap(VectorPassingProbe);
-	std::vector<int>().swap(PassingProbeTrackingMuon);
-	std::vector<double>().swap(MassPassingTagProbeTracking);
-	std::vector<double>().swap(MassFailingTagProbeTracking);
-
-	std::vector<int>().swap(PassingProbeStandAloneMuon);
-	std::vector<int>().swap(PassingProbeIDMuon);
+	TagMuon_Pt = 0.;
+	TagMuon_Eta = 0.;
+	TagMuon_Phi = 0.;
 	
+	ProbeMuon_Pt = 0.;
+	ProbeMuon_Eta = 0.;
+	ProbeMuon_Phi = 0.;
 	
-	
+	PassingProbeTrackingMuon = 0;
+	MassPassingTagProbeTracking = 0;
+
+	PassingProbeStandAloneMuon = 0;
+	PassingProbeIDMuon = 0;
+
+	//See if this happen between each event
+	std::cout << "Cleaning Variables: " << std::endl;
+		
 
 }
 //------------------------------------------------------------------------------------------------------------
@@ -308,18 +287,11 @@ void JpsiAnalyzerOpen2011::analyze(const edm::Event& iEvent, const edm::EventSet
 	if (verbose_) std::cout<<" Run # "<<irun<<" Evt # "<<ievt<<" lumiBlock # "<<lumiBlock<<std::endl;
           
 	using namespace edm;
-
-	//Accessing Track Collection
-	//edm::Handle<reco::VertexCollection> recoVertices;
-	//iEvent.getByLabel(primaryVertexProducer_, recoVertices);
 	
 	//Look for the Primary Vertex (and use the BeamSpot instead, if you can't find it):
   reco::Vertex::Point posVtx;
   reco::Vertex::Error errVtx;
   unsigned int theIndexOfThePrimaryVertex = 999.;
-
-//GET BY LABEL
-	
 
   edm::Handle<reco::VertexCollection> vertex;
   //iEvent.getByToken(theVertexLabel_, vertex);
@@ -367,7 +339,7 @@ void JpsiAnalyzerOpen2011::analyze(const edm::Event& iEvent, const edm::EventSet
 	//------------------------------------------------------------------
 	//if(triggerflag_){
 
-    std::cout << "Using Trigger selection "<< std::endl;
+    //std::cout << "Using Trigger selection "<< std::endl;
 
 	// *** get Handle to the TriggerEvent
 	edm::Handle<trigger::TriggerEvent> triggerEventHandle_;
@@ -387,7 +359,6 @@ void JpsiAnalyzerOpen2011::analyze(const edm::Event& iEvent, const edm::EventSet
 		return;
 	}
     
-
 	// Only events in which the path actually fired had stored the filter results and products:	  
     for (unsigned int i=0; i<triggerName_.size(); i++) 
 	{   
@@ -434,14 +405,12 @@ void JpsiAnalyzerOpen2011::analyze(const edm::Event& iEvent, const edm::EventSet
 		//---------------------------------------------------------------------------
 		//As loose muon criteria we only select muons of the muon collection
 	
-		//if (muon::isTightMuon(*muon, vtx) ) continue;
-
 		myLeptons.push_back(*muon); //fill
 
 	}//End  Muon Loop
 
 	//==========================================================================
-	// sort the muons of highest pt to lowest 
+	// sort the muons of highest pT to lowest 
 	//==========================================================================
 	std::sort(myLeptons.begin(),myLeptons.end(), [](const reco::Muon &a, const reco::Muon &b)
 	{
@@ -452,138 +421,149 @@ void JpsiAnalyzerOpen2011::analyze(const edm::Event& iEvent, const edm::EventSet
 	//==========================================================================
 	if (myLeptons.size() >= 2) 
 	{ // Dimuon
-		
-		nDimuon++;
+			
 		if(verbose_) std::cout<<"RECO  Muons Multiplicity:  " << myLeptons.size() << std::endl;
 		reco::Muon leadingMuon = myLeptons[0];//first muon - with highest Pt
 		reco::Muon trailingMuon = myLeptons[1];//second muon - with the second highest Pt
 
-		//Loretz Vector of the Muons
+		//Loretz Vector of the Lepton
 		mu_1.SetPtEtaPhiM(leadingMuon.pt(), leadingMuon.eta(), leadingMuon.phi(), leadingMuon.mass());
 		mu_2.SetPtEtaPhiM(trailingMuon.pt(), trailingMuon.eta(), trailingMuon.phi(), trailingMuon.mass());
 	
-		//Massa Invariante #mu#mu of two Particles
-		M = (mu_1+mu_2).Mag();	
+		//Unvariant Mass of two Particles
+		M = (mu_1+mu_2).M();	
 
 		//Oppossite Charge - The ressonance has charge 0, so the two bodies decay must have oppostite charges
 		if ( leadingMuon.charge() == trailingMuon.charge() )	continue;
+		nDimuon++;
 		
 		//Ressonance window
 		if ( (M > 2.5) && (M < 3.6) )
 		{
+			std::cout<< "----------------------------------"<< std::endl;
 			
 			//Simple variables. Not vectors.
 			//==========================================================================
 			//To apply the tight muon criteria
 			if( muon::isTightMuon(leadingMuon, vtx) )
 			{
-				//Fill Vectors
-				VectorTagMuon_Pt.push_back(leadingMuon.pt());
-				VectorTagMuon_Eta.push_back(leadingMuon.eta());
-				VectorTagMuon_Phi.push_back(leadingMuon.phi());
-				VectorTagMuon_Charge.push_back(leadingMuon.charge());
-				VectorTagMuon_Mass.push_back(leadingMuon.mass());
-
-				std::cout<< " leadingMuon.pt(): "<< leadingMuon.pt() << std::endl;
-				std::cout<< " trailingMuon.pt(): "<< trailingMuon.pt() << std::endl;
-
-				ProbeMuon_Pt = trailingMuon.pt();
-
-				
-
-				VectorProbeMuon_Pt.push_back(trailingMuon.pt());
-				VectorProbeMuon_Eta.push_back(trailingMuon.eta());
-				VectorProbeMuon_Phi.push_back(trailingMuon.phi());
-				VectorProbeMuon_Charge.push_back(trailingMuon.charge());
-				VectorProbeMuon_Mass.push_back(trailingMuon.mass());
-
-				VectorMll.push_back(M); //Fill vector
+				TagAndProbes++;			
+				//std::cout<< "TagMuon.pt(): "<< leadingMuon.pt() << " ProbeMuon.pt(): " << trailingMuon.pt()<< std::endl;
 
 				//For tracking Muon Efficience
 				if ( trailingMuon.isTrackerMuon() )
-				{
-					PassingProbeTrackingMuon.push_back(1);
-					MassPassingTagProbeTracking.push_back(M);
+				{	
+					TagMuon_Pt = leadingMuon.pt();
+					TagMuon_Eta = leadingMuon.eta();
+					TagMuon_Phi = leadingMuon.phi();
+					
+					ProbeMuon_Pt = trailingMuon.pt();
+					ProbeMuon_Eta = trailingMuon.eta();
+					ProbeMuon_Phi = trailingMuon.phi();
+					
+					MassPassingTagProbeTracking = M;
+					PassingProbeTrackingMuon = 1;
+
+					
 				}
 				else
 				{
-					PassingProbeTrackingMuon.push_back(0);
-					MassFailingTagProbeTracking.push_back(M);
+					//Probe
+					MassFailingTagProbeTracking = M;
+					PassingProbeTrackingMuon = 0;
+					std::cout<< " MassFailingTagProbeTracking: " << M << std::endl;
+					
 				}
 
+				//------------------------------------------
 				//For StandAlone Muon Efficience
+				//------------------------------------------
 				if (  trailingMuon.isStandAloneMuon() )
 				{
-            	PassingProbeStandAloneMuon.push_back(1);
+            	PassingProbeStandAloneMuon = 1;
 				}
 				else
 				{
-					PassingProbeStandAloneMuon.push_back(0);
+					PassingProbeStandAloneMuon = 0;
 				}
-
+				//------------------------------------------
 				//For ID Muon Efficience
+				//------------------------------------------
 				if (  trailingMuon.isTrackerMuon() && trailingMuon.isStandAloneMuon() && trailingMuon.isGlobalMuon() )
 				{
-            	PassingProbeIDMuon.push_back(1);
+            	PassingProbeIDMuon = 1;
 				}
 				else
 				{
-					PassingProbeIDMuon.push_back(0);
+					PassingProbeIDMuon = 0;
 				}
+
+				//std::cout<< "Filling Varaibles: "<< std::endl;
+				AnalysisTree->Fill();
+				PlotControl->Fill();
 			
 			}
 			//Notice that we fill as opposite way that the IF above
 			else if (muon::isTightMuon(trailingMuon, vtx) ) 
 			{
-				//Fill Vectors
-				VectorTagMuon_Pt.push_back(trailingMuon.pt());
-				VectorTagMuon_Eta.push_back(trailingMuon.eta());
-				VectorTagMuon_Phi.push_back(trailingMuon.phi());
-				VectorTagMuon_Charge.push_back(trailingMuon.charge());
-				VectorTagMuon_Mass.push_back(trailingMuon.mass());
-
-				VectorProbeMuon_Pt.push_back(leadingMuon.pt());
-				VectorProbeMuon_Eta.push_back(leadingMuon.eta());
-				VectorProbeMuon_Phi.push_back(leadingMuon.phi());
-				VectorProbeMuon_Charge.push_back(leadingMuon.charge());
-				VectorProbeMuon_Mass.push_back(leadingMuon.mass());
+				TagAndProbes++;
+				//Fill Vectors				
+				//std::cout<< "TagMuon.pt(): "<< trailingMuon.pt() << " ProbeMuon.pt(): " << leadingMuon.pt()<< std::endl;
 				
+				//------------------------------------------
 				//For tracking Muon Efficience
+				//------------------------------------------
 				if ( leadingMuon.isTrackerMuon() )
 				{
-					PassingProbeTrackingMuon.push_back(1);
-					MassPassingTagProbeTracking.push_back(M);
+					TagMuon_Pt = trailingMuon.pt();
+					TagMuon_Eta = trailingMuon.eta();
+					TagMuon_Phi = trailingMuon.phi();
+					
+					ProbeMuon_Pt = leadingMuon.pt();
+					ProbeMuon_Eta = leadingMuon.eta();
+					ProbeMuon_Phi = leadingMuon.phi();
+					
+					MassPassingTagProbeTracking = M;
+					PassingProbeTrackingMuon = 1;
+					
 				}
 				else
 				{
-					PassingProbeTrackingMuon.push_back(0);
-					MassFailingTagProbeTracking.push_back(M);
+					MassFailingTagProbeTracking = M;
+					PassingProbeTrackingMuon = 0;
+					std::cout<< " MassFailingTagProbeTracking: " << M << std::endl;
+					
 				}
-
+				//------------------------------------------
 				//For StandAlone Muon Efficience
+				//------------------------------------------
 				if (  leadingMuon.isStandAloneMuon() )
 				{
-            	PassingProbeStandAloneMuon.push_back(1);
+            	PassingProbeStandAloneMuon = 1;
 				}
 				else
 				{
-					PassingProbeStandAloneMuon.push_back(0);
+					PassingProbeStandAloneMuon = 0;
 				}
-
+				//------------------------------------------
 				//For ID Muon Efficience
+				//------------------------------------------
 				if (  leadingMuon.isPFMuon() )
 				{
-            	PassingProbeIDMuon.push_back(1);
+            	PassingProbeIDMuon = 1;
 				}
 				else
 				{
-					PassingProbeIDMuon.push_back(0);
+					PassingProbeIDMuon = 0;
 				}
 		
+				//std::cout<< "Filling Varaibles: "<< M << std::endl;
 
-
-			}
+				AnalysisTree->Fill();
+				PlotControl->Fill();
 		
+			}
+			
 		}
 
 	}//end Dimuon
@@ -592,74 +572,76 @@ void JpsiAnalyzerOpen2011::analyze(const edm::Event& iEvent, const edm::EventSet
 
 	}// loop trigger names
 
-	AnalysisTree->Fill();
-	
-}//end analize
+	//Cleaning Variables
+	//std::cout << "Cleaning Variables: " << std::endl;
 
+	/*	
+	TagMuon_Pt = 0.;
+	TagMuon_Eta = 0.;
+	TagMuon_Phi = 0.;
+	
+	ProbeMuon_Pt = 0.;
+	ProbeMuon_Eta = 0.;
+	ProbeMuon_Phi = 0.;
+	
+	PassingProbeTrackingMuon = 0;
+	MassPassingTagProbeTracking = 0;
+
+	PassingProbeStandAloneMuon = 0;
+	PassingProbeIDMuon = 0;
+	*/		
+
+}//end analizer
 
 // ------------ method called once each job just before starting event loop  ------------
 	void
 JpsiAnalyzerOpen2011::beginJob()
 {
-	PlotControl->Branch("VectorProbeMuon_Pt","std::vector<double>", &VectorProbeMuon_Pt);
-	//Create and Fill Branchs
-	AnalysisTree->Branch("ProbeMuon_Pt", &ProbeMuon_Pt, "ProbeMuon_Pt/F");
+	AnalysisTree->Branch("ProbeMuon_Pt", &ProbeMuon_Pt, "ProbeMuon_Pt/D");
+	AnalysisTree->Branch("ProbeMuon_Eta", &ProbeMuon_Eta, "ProbeMuon_Eta/D");
+
+	AnalysisTree->Branch("PassingProbeTrackingMuon", &PassingProbeTrackingMuon, "PassingProbeTrackingMuon/I");
+	AnalysisTree->Branch("MassPassingTagProbeTracking", &MassPassingTagProbeTracking, "MassPassingTagProbeTracking/D");
+	AnalysisTree->Branch("MassFailingTagProbeTracking", &MassFailingTagProbeTracking, "MassFailingTagProbeTracking/D");
+
+	AnalysisTree->Branch("PassingProbeStandAloneMuon", &PassingProbeStandAloneMuon, "PassingProbeStandAloneMuon/I");
+
+	AnalysisTree->Branch("PassingProbeIDMuon", &PassingProbeIDMuon, "PassingProbeIDMuon/I");
 	
-	/*AnalysisTree->Branch("VectorProbeMuon_Pt","std::vector<double>", &VectorProbeMuon_Pt);
-	AnalysisTree->Branch("VectorProbeMuon_Eta","std::vector<double>", &VectorProbeMuon_Eta);
-	AnalysisTree->Branch("Mll","std::vector<double>", &VectorMll);
-	AnalysisTree->Branch("PassingProbeTrackingMuon","std::vector<int>", &PassingProbeTrackingMuon);
-	AnalysisTree->Branch("MassPassingTagProbeTracking","std::vector<double>", &MassPassingTagProbeTracking);
-	AnalysisTree->Branch("MassFailingTagProbeTracking","std::vector<double>", &MassFailingTagProbeTracking);
+	//Create and Fill Branchs
+	PlotControl->Branch("TagMuon_Pt", &TagMuon_Pt, "TagMuon_Pt/D");
+	PlotControl->Branch("TagMuon_Eta", &TagMuon_Eta, "TagMuon_Eta/D");
+	PlotControl->Branch("TagMuon_Phi", &TagMuon_Phi, "TagMuon_Phi/D");
+	
+	PlotControl->Branch("ProbeMuon_Pt", &ProbeMuon_Pt, "ProbeMuon_Pt/D");
+	PlotControl->Branch("ProbeMuon_Eta", &ProbeMuon_Eta, "ProbeMuon_Eta/D");
+	PlotControl->Branch("ProbeMuon_Phi", &ProbeMuon_Phi, "ProbeMuon_Phi/D");
+	
+	PlotControl->Branch("PassingProbeTrackingMuon", &PassingProbeTrackingMuon, "PassingProbeTrackingMuon/I");
+	PlotControl->Branch("MassPassingTagProbeTracking", &MassPassingTagProbeTracking, "MassPassingTagProbeTracking/D");
+	PlotControl->Branch("MassFailingTagProbeTracking", &MassFailingTagProbeTracking, "MassFailingTagProbeTracking/D");
 
-
-	AnalysisTree->Branch("PassingProbeStandAloneMuon","std::vector<int>", &PassingProbeStandAloneMuon);
-	AnalysisTree->Branch("PassingProbeIDMuon","std::vector<int>", &PassingProbeIDMuon);
-
+   //Trigger Info Branches
 	PlotControl->Branch("ievt", &ievt, "ievt/I");
 	PlotControl->Branch("irun", &irun, "irun/I");
 	PlotControl->Branch("lumiblock", &lumiBlock, "lumiblock/I" );
 	PlotControl->Branch("Total_Events", &Total_Events, "Total_Events/I");
-      
-   //Trigger Info Branches
 	PlotControl->Branch("HLTriggerName", &NameTrigger);
 	PlotControl->Branch("TriggerAcceptedID", &countInAccepted, "countInAccepted/I");
-	PlotControl->Branch("TriggeredFiredID", &countInTriggered, "countInTriggered/I");
-     
+	PlotControl->Branch("TriggeredFiredID", &countInTriggered, "countInTriggered/I");    
 	PlotControl->Branch("Muons", &CounterMuons, "CounterMuons/I");
-
 	PlotControl->Branch("nDimuon", &nDimuon, "nDimuon/I");
-
-	PlotControl->Branch("VectorEvent","std::vector<int>", &VectorEvent);
-	PlotControl->Branch("VectorRun","std::vector<int>", &VectorRun);
-	PlotControl->Branch("VectorlumiBlock","std::vector<int>", &VectorlumiBlock);
-
-	PlotControl->Branch("VectorTagMuon_Pt","std::vector<double>", &VectorTagMuon_Pt);
-	PlotControl->Branch("VectorTagMuon_Eta","std::vector<double>", &VectorTagMuon_Eta);
-	PlotControl->Branch("VectorTagMuon_Phi","std::vector<double>", &VectorTagMuon_Phi);
-	PlotControl->Branch("VectorTagMuon_Charge","std::vector<int>", &VectorTagMuon_Charge);
-	PlotControl->Branch("VectorTagMuon_Mass","std::vector<double>", &VectorTagMuon_Mass);
-
-	PlotControl->Branch("VectorProbeMuon_Pt","std::vector<double>", &VectorProbeMuon_Pt);
-	PlotControl->Branch("VectorProbeMuon_Eta","std::vector<double>", &VectorProbeMuon_Eta);
-	PlotControl->Branch("VectorProbeMuon_Phi","std::vector<double>", &VectorProbeMuon_Phi);
-	PlotControl->Branch("VectorProbeMuon_Charge","std::vector<int>", &VectorProbeMuon_Charge);
-	PlotControl->Branch("VectorProbeMuon_Mass","std::vector<double>", &VectorProbeMuon_Mass);
-
-	PlotControl->Branch("MllpT","std::vector<double>", &VectorMllpT);
-	PlotControl->Branch("Mlleta","std::vector<double>", &VectorMlleta);
-	PlotControl->Branch("Mllphi","std::vector<double>", &VectorMllphi);*/
 
 }
 
-// ------------ method called once each job just after ending the event loop  ------------nalysisTree->Branch("VectorMll","std::vector<double>", &VectorMll);
+// ------------ method called once each job just after ending the event loop  ------------
 //
 	void
 JpsiAnalyzerOpen2011::endJob()
 {
 	//Fill the Trees
 	//AnalysisTree->Fill();
- 	PlotControl->Fill();
+ 	//PlotControl->Fill();
 
 	std::cout << " " << std::endl;
 	std::cout << "*********************************************************************** " << std::endl;
@@ -674,6 +656,7 @@ JpsiAnalyzerOpen2011::endJob()
    }
 	std::cout << "Muons Multiplicity: " << CounterMuons << std::endl;
 	std::cout << "nDimuon: " << nDimuon << std::endl;
+	std::cout << "TagAndProbes: " << TagAndProbes << std::endl;
 	std::cout << "*********************************************************************** " << std::endl;
        //}
 
